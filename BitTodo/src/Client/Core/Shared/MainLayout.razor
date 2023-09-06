@@ -4,6 +4,7 @@
 
 <Header OnToggleMenu=ToggleMenuHandler />
 
+@* 
 @if (_isUserAuthenticated)
 {
     <NavMenu @bind-IsMenuOpen=_isMenuOpen />
@@ -16,6 +17,21 @@
         </AppErrorBoundary>
     </div>
     <Footer />
-</div>
+</div> *@
+
+<!-- site-primary -->
+<main id="main" class="site-primary">
+	<div class="site-content">
+		<div class="homepage-content">
+			<AppErrorBoundary>
+				@Body
+			</AppErrorBoundary>
+		</div>
+		<!-- homepage-content -->
+	</div>
+	<!-- site-content -->
+</main>
+
+<Footer />
 
 <MessageBox />
