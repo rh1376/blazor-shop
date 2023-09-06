@@ -1,0 +1,2259 @@
+﻿@using Bit.BlazorUI
+@using BitTodo.Shared.Infra
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Http;
+@using RenderMode = Microsoft.AspNetCore.Mvc.Rendering.RenderMode
+
+@namespace BitTodo.Client.Web.Pages
+@inject IHttpContextAccessor ContextAccessor
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    var isElectron = BlazorModeDetector.Current.IsBlazorElectron();
+    var isBlazorServer = BlazorModeDetector.Current.IsBlazorServer();
+    var isSpa = WebAppDeploymentTypeDetector.Current.IsSpa();
+    var isPwa = WebAppDeploymentTypeDetector.Current.IsPwa();
+    var isSpaPrerendered = WebAppDeploymentTypeDetector.Current.IsSpaPrerendered();
+    var isPwaPrerendered = WebAppDeploymentTypeDetector.Current.IsPwaPrerendered();
+    var isPrerenderedOnly = WebAppDeploymentTypeDetector.Current.IsPrerenderedOnly();
+
+    var request = ContextAccessor?.HttpContext?.Request;
+    var noPrerender = (request?.Query["no-prerender"].Count ?? 0) > 0;
+
+    RenderMode renderMode = RenderMode.Static;
+    if (isPrerenderedOnly is false)
+    {
+        if (isBlazorServer)
+        {
+            renderMode = isSpa || isPwa || noPrerender ? RenderMode.Server : RenderMode.ServerPrerendered;
+        }
+        else
+        {
+            renderMode = isSpa || isPwa || noPrerender ? RenderMode.WebAssembly : RenderMode.WebAssemblyPrerendered;
+        }
+    }
+
+    if (renderMode is RenderMode.ServerPrerendered or RenderMode.WebAssemblyPrerendered)
+    {
+        if (request?.ShouldRenderStaticMode() is true)
+        {
+            renderMode = RenderMode.Static;
+            isPrerenderedOnly = true;
+        }
+    }
+}
+
+<!DOCTYPE html>
+<html bit-theme="dark">
+<head>
+    <base href="~/" />
+    <meta charset="utf-8" />
+    <meta name="theme-color">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="The BitTodo is built with ASP.NET Core, Identity, Web API, and EF Core for the server-side, and Blazor for the client-side. It allows you to build Android, iOS, Windows, and Web applications from a single codebase." />
+    <link rel="icon" href="~/favicon.ico" type="image/x-icon" asp-append-version=true>
+    <component type="typeof(HeadOutlet)" render-mode="@renderMode" />
+    @if (isPwa || isPwaPrerendered)
+    {
+        <link rel="manifest" href="manifest.json">
+    }
+    @if (isElectron)
+    {
+        <style>
+            * {
+                -webkit-user-drag: none;
+                overscroll-behavior: none;
+            }
+
+                *:not(input) {
+                    -webkit-user-select: none;
+                    -moz-user-select: none;
+                    -ms-user-select: none;
+                    user-select: none;
+                }
+        </style>
+    }
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1">
+
+    <title>Bacola &#8211; Grocery Market and Food Theme &#8211; KlbTheme</title>
+    <meta name='robots' content='noindex, nofollow' />
+    <link rel='dns-prefetch' href='//fonts.googleapis.com' />
+    <link href='https://fonts.gstatic.com' crossorigin rel='preconnect' />
+    <link rel="alternate" type="application/rss+xml" title="Bacola - Grocery Market and Food Theme &raquo; Feed" href="https://klbtheme.com/bacola/feed/" />
+    <link rel="alternate" type="application/rss+xml" title="Bacola - Grocery Market and Food Theme &raquo; Comments Feed" href="https://klbtheme.com/bacola/comments/feed/" />
+    <link rel="alternate" type="application/rss+xml" title="Bacola - Grocery Market and Food Theme &raquo; Home Comments Feed" href="https://klbtheme.com/bacola/home/feed/" />
+    <style type="text/css">
+        img.wp-smiley,
+        img.emoji {
+            display: inline !important;
+            border: none !important;
+            box-shadow: none !important;
+            height: 1em !important;
+            width: 1em !important;
+            margin: 0 0.07em !important;
+            vertical-align: -0.1em !important;
+            background: none !important;
+            padding: 0 !important;
+        }
+    </style>
+    <link rel='stylesheet' id='wp-block-library-css' href='https://klbtheme.com/bacola/wp-includes/css/dist/block-library/style.min.css?ver=6.3.1' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/wc-blocks.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-active-filters-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/active-filters.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-add-to-cart-form-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/add-to-cart-form.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-packages-style-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/packages-style.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-all-products-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/all-products.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-all-reviews-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/all-reviews.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-attribute-filter-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/attribute-filter.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-breadcrumbs-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/breadcrumbs.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-catalog-sorting-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/catalog-sorting.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-customer-account-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/customer-account.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-featured-category-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/featured-category.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-featured-product-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/featured-product.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-mini-cart-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/mini-cart.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-price-filter-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/price-filter.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-product-add-to-cart-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/product-add-to-cart.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-product-button-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/product-button.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-product-categories-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/product-categories.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-product-image-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/product-image.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-product-image-gallery-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/product-image-gallery.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-product-query-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/product-query.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-product-results-count-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/product-results-count.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-product-reviews-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/product-reviews.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-product-sale-badge-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/product-sale-badge.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-product-search-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/product-search.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-product-sku-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/product-sku.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-product-stock-indicator-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/product-stock-indicator.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-product-summary-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/product-summary.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-product-title-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/product-title.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-rating-filter-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/rating-filter.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-reviews-by-category-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/reviews-by-category.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-reviews-by-product-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/reviews-by-product.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-product-details-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/product-details.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-single-product-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/single-product.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-stock-filter-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/stock-filter.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-cart-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/cart.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-checkout-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/checkout.css?ver=10.6.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='wc-blocks-style-mini-cart-contents-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/packages/woocommerce-blocks/build/mini-cart-contents.css?ver=10.6.6' type='text/css' media='all' />
+    <style id='classic-theme-styles-inline-css' type='text/css'>
+        /*! This file is auto-generated */
+        .wp-block-button__link {
+            color: #fff;
+            background-color: #32373c;
+            border-radius: 9999px;
+            box-shadow: none;
+            text-decoration: none;
+            padding: calc(.667em + 2px) calc(1.333em + 2px);
+            font-size: 1.125em
+        }
+
+        .wp-block-file__button {
+            background: #32373c;
+            color: #fff;
+            text-decoration: none
+        }
+    </style>
+    <style id='global-styles-inline-css' type='text/css'>
+        body {
+            --wp--preset--color--black: #000000;
+            --wp--preset--color--cyan-bluish-gray: #abb8c3;
+            --wp--preset--color--white: #ffffff;
+            --wp--preset--color--pale-pink: #f78da7;
+            --wp--preset--color--vivid-red: #cf2e2e;
+            --wp--preset--color--luminous-vivid-orange: #ff6900;
+            --wp--preset--color--luminous-vivid-amber: #fcb900;
+            --wp--preset--color--light-green-cyan: #7bdcb5;
+            --wp--preset--color--vivid-green-cyan: #00d084;
+            --wp--preset--color--pale-cyan-blue: #8ed1fc;
+            --wp--preset--color--vivid-cyan-blue: #0693e3;
+            --wp--preset--color--vivid-purple: #9b51e0;
+            --wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);
+            --wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);
+            --wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);
+            --wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);
+            --wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);
+            --wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);
+            --wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);
+            --wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);
+            --wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);
+            --wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);
+            --wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);
+            --wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);
+            --wp--preset--font-size--small: 13px;
+            --wp--preset--font-size--medium: 20px;
+            --wp--preset--font-size--large: 36px;
+            --wp--preset--font-size--x-large: 42px;
+            --wp--preset--spacing--20: 0.44rem;
+            --wp--preset--spacing--30: 0.67rem;
+            --wp--preset--spacing--40: 1rem;
+            --wp--preset--spacing--50: 1.5rem;
+            --wp--preset--spacing--60: 2.25rem;
+            --wp--preset--spacing--70: 3.38rem;
+            --wp--preset--spacing--80: 5.06rem;
+            --wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);
+            --wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);
+            --wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);
+            --wp--preset--shadow--outlined: 6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1);
+            --wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1);
+        }
+
+        :where(.is-layout-flex) {
+            gap: 0.5em;
+        }
+
+        :where(.is-layout-grid) {
+            gap: 0.5em;
+        }
+
+        body .is-layout-flow > .alignleft {
+            float: left;
+            margin-inline-start: 0;
+            margin-inline-end: 2em;
+        }
+
+        body .is-layout-flow > .alignright {
+            float: right;
+            margin-inline-start: 2em;
+            margin-inline-end: 0;
+        }
+
+        body .is-layout-flow > .aligncenter {
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        body .is-layout-constrained > .alignleft {
+            float: left;
+            margin-inline-start: 0;
+            margin-inline-end: 2em;
+        }
+
+        body .is-layout-constrained > .alignright {
+            float: right;
+            margin-inline-start: 2em;
+            margin-inline-end: 0;
+        }
+
+        body .is-layout-constrained > .aligncenter {
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        body .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)) {
+            max-width: var(--wp--style--global--content-size);
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        body .is-layout-constrained > .alignwide {
+            max-width: var(--wp--style--global--wide-size);
+        }
+
+        body .is-layout-flex {
+            display: flex;
+        }
+
+        body .is-layout-flex {
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+            body .is-layout-flex > * {
+                margin: 0;
+            }
+
+        body .is-layout-grid {
+            display: grid;
+        }
+
+            body .is-layout-grid > * {
+                margin: 0;
+            }
+
+        :where(.wp-block-columns.is-layout-flex) {
+            gap: 2em;
+        }
+
+        :where(.wp-block-columns.is-layout-grid) {
+            gap: 2em;
+        }
+
+        :where(.wp-block-post-template.is-layout-flex) {
+            gap: 1.25em;
+        }
+
+        :where(.wp-block-post-template.is-layout-grid) {
+            gap: 1.25em;
+        }
+
+        .has-black-color {
+            color: var(--wp--preset--color--black) !important;
+        }
+
+        .has-cyan-bluish-gray-color {
+            color: var(--wp--preset--color--cyan-bluish-gray) !important;
+        }
+
+        .has-white-color {
+            color: var(--wp--preset--color--white) !important;
+        }
+
+        .has-pale-pink-color {
+            color: var(--wp--preset--color--pale-pink) !important;
+        }
+
+        .has-vivid-red-color {
+            color: var(--wp--preset--color--vivid-red) !important;
+        }
+
+        .has-luminous-vivid-orange-color {
+            color: var(--wp--preset--color--luminous-vivid-orange) !important;
+        }
+
+        .has-luminous-vivid-amber-color {
+            color: var(--wp--preset--color--luminous-vivid-amber) !important;
+        }
+
+        .has-light-green-cyan-color {
+            color: var(--wp--preset--color--light-green-cyan) !important;
+        }
+
+        .has-vivid-green-cyan-color {
+            color: var(--wp--preset--color--vivid-green-cyan) !important;
+        }
+
+        .has-pale-cyan-blue-color {
+            color: var(--wp--preset--color--pale-cyan-blue) !important;
+        }
+
+        .has-vivid-cyan-blue-color {
+            color: var(--wp--preset--color--vivid-cyan-blue) !important;
+        }
+
+        .has-vivid-purple-color {
+            color: var(--wp--preset--color--vivid-purple) !important;
+        }
+
+        .has-black-background-color {
+            background-color: var(--wp--preset--color--black) !important;
+        }
+
+        .has-cyan-bluish-gray-background-color {
+            background-color: var(--wp--preset--color--cyan-bluish-gray) !important;
+        }
+
+        .has-white-background-color {
+            background-color: var(--wp--preset--color--white) !important;
+        }
+
+        .has-pale-pink-background-color {
+            background-color: var(--wp--preset--color--pale-pink) !important;
+        }
+
+        .has-vivid-red-background-color {
+            background-color: var(--wp--preset--color--vivid-red) !important;
+        }
+
+        .has-luminous-vivid-orange-background-color {
+            background-color: var(--wp--preset--color--luminous-vivid-orange) !important;
+        }
+
+        .has-luminous-vivid-amber-background-color {
+            background-color: var(--wp--preset--color--luminous-vivid-amber) !important;
+        }
+
+        .has-light-green-cyan-background-color {
+            background-color: var(--wp--preset--color--light-green-cyan) !important;
+        }
+
+        .has-vivid-green-cyan-background-color {
+            background-color: var(--wp--preset--color--vivid-green-cyan) !important;
+        }
+
+        .has-pale-cyan-blue-background-color {
+            background-color: var(--wp--preset--color--pale-cyan-blue) !important;
+        }
+
+        .has-vivid-cyan-blue-background-color {
+            background-color: var(--wp--preset--color--vivid-cyan-blue) !important;
+        }
+
+        .has-vivid-purple-background-color {
+            background-color: var(--wp--preset--color--vivid-purple) !important;
+        }
+
+        .has-black-border-color {
+            border-color: var(--wp--preset--color--black) !important;
+        }
+
+        .has-cyan-bluish-gray-border-color {
+            border-color: var(--wp--preset--color--cyan-bluish-gray) !important;
+        }
+
+        .has-white-border-color {
+            border-color: var(--wp--preset--color--white) !important;
+        }
+
+        .has-pale-pink-border-color {
+            border-color: var(--wp--preset--color--pale-pink) !important;
+        }
+
+        .has-vivid-red-border-color {
+            border-color: var(--wp--preset--color--vivid-red) !important;
+        }
+
+        .has-luminous-vivid-orange-border-color {
+            border-color: var(--wp--preset--color--luminous-vivid-orange) !important;
+        }
+
+        .has-luminous-vivid-amber-border-color {
+            border-color: var(--wp--preset--color--luminous-vivid-amber) !important;
+        }
+
+        .has-light-green-cyan-border-color {
+            border-color: var(--wp--preset--color--light-green-cyan) !important;
+        }
+
+        .has-vivid-green-cyan-border-color {
+            border-color: var(--wp--preset--color--vivid-green-cyan) !important;
+        }
+
+        .has-pale-cyan-blue-border-color {
+            border-color: var(--wp--preset--color--pale-cyan-blue) !important;
+        }
+
+        .has-vivid-cyan-blue-border-color {
+            border-color: var(--wp--preset--color--vivid-cyan-blue) !important;
+        }
+
+        .has-vivid-purple-border-color {
+            border-color: var(--wp--preset--color--vivid-purple) !important;
+        }
+
+        .has-vivid-cyan-blue-to-vivid-purple-gradient-background {
+            background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;
+        }
+
+        .has-light-green-cyan-to-vivid-green-cyan-gradient-background {
+            background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;
+        }
+
+        .has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background {
+            background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;
+        }
+
+        .has-luminous-vivid-orange-to-vivid-red-gradient-background {
+            background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;
+        }
+
+        .has-very-light-gray-to-cyan-bluish-gray-gradient-background {
+            background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;
+        }
+
+        .has-cool-to-warm-spectrum-gradient-background {
+            background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;
+        }
+
+        .has-blush-light-purple-gradient-background {
+            background: var(--wp--preset--gradient--blush-light-purple) !important;
+        }
+
+        .has-blush-bordeaux-gradient-background {
+            background: var(--wp--preset--gradient--blush-bordeaux) !important;
+        }
+
+        .has-luminous-dusk-gradient-background {
+            background: var(--wp--preset--gradient--luminous-dusk) !important;
+        }
+
+        .has-pale-ocean-gradient-background {
+            background: var(--wp--preset--gradient--pale-ocean) !important;
+        }
+
+        .has-electric-grass-gradient-background {
+            background: var(--wp--preset--gradient--electric-grass) !important;
+        }
+
+        .has-midnight-gradient-background {
+            background: var(--wp--preset--gradient--midnight) !important;
+        }
+
+        .has-small-font-size {
+            font-size: var(--wp--preset--font-size--small) !important;
+        }
+
+        .has-medium-font-size {
+            font-size: var(--wp--preset--font-size--medium) !important;
+        }
+
+        .has-large-font-size {
+            font-size: var(--wp--preset--font-size--large) !important;
+        }
+
+        .has-x-large-font-size {
+            font-size: var(--wp--preset--font-size--x-large) !important;
+        }
+
+        .wp-block-navigation a:where(:not(.wp-element-button)) {
+            color: inherit;
+        }
+
+        :where(.wp-block-post-template.is-layout-flex) {
+            gap: 1.25em;
+        }
+
+        :where(.wp-block-post-template.is-layout-grid) {
+            gap: 1.25em;
+        }
+
+        :where(.wp-block-columns.is-layout-flex) {
+            gap: 2em;
+        }
+
+        :where(.wp-block-columns.is-layout-grid) {
+            gap: 2em;
+        }
+
+        .wp-block-pullquote {
+            font-size: 1.5em;
+            line-height: 1.6;
+        }
+    </style>
+    <link rel='stylesheet' id='contact-form-7-css' href='https://klbtheme.com/bacola/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=5.8' type='text/css' media='all' />
+    <style id='woocommerce-inline-inline-css' type='text/css'>
+        .woocommerce form .form-row .required {
+            visibility: visible;
+        }
+    </style>
+    <link rel='stylesheet' id='klb-single-ajax-css' href='https://klbtheme.com/bacola/wp-content/plugins/bacola-core/woocommerce-filter/single-ajax/css/single-ajax.css?ver=1.0' type='text/css' media='all' />
+    <link rel='stylesheet' id='klb-notice-ajax-css' href='https://klbtheme.com/bacola/wp-content/plugins/bacola-core/woocommerce-filter/notice-ajax/css/notice-ajax.css?ver=1.0' type='text/css' media='all' />
+    <link rel='stylesheet' id='klb-back-to-top-css' href='https://klbtheme.com/bacola/wp-content/plugins/bacola-core/woocommerce-filter/back-to-top/css/back-to-top.css?ver=1.0' type='text/css' media='all' />
+    <link rel='stylesheet' id='klbtheme-swatches-css' href='https://klbtheme.com/bacola/wp-content/plugins/bacola-core/woocommerce-filter/swatches/css/swatches.css?ver=6.3.1' type='text/css' media='all' />
+    <link rel='stylesheet' id='klb-free-shipping-css' href='https://klbtheme.com/bacola/wp-content/plugins/bacola-core/woocommerce-filter/shipping-progress-bar/css/free-shipping.css?ver=1.0' type='text/css' media='all' />
+    <link rel='stylesheet' id='bacola-ajax-search-css' href='https://klbtheme.com/bacola/wp-content/plugins/bacola-core/woocommerce-filter/ajax-search/css/ajax-search.css?ver=1.0' type='text/css' media='all' />
+    <link rel='stylesheet' id='hint-css' href='https://klbtheme.com/bacola/wp-content/plugins/woo-smart-compare/assets/libs/hint/hint.min.css?ver=6.3.1' type='text/css' media='all' />
+    <link rel='stylesheet' id='perfect-scrollbar-css' href='https://klbtheme.com/bacola/wp-content/plugins/woo-smart-compare/assets/libs/perfect-scrollbar/css/perfect-scrollbar.min.css?ver=6.3.1' type='text/css' media='all' />
+    <link rel='stylesheet' id='perfect-scrollbar-wpc-css' href='https://klbtheme.com/bacola/wp-content/plugins/woo-smart-compare/assets/libs/perfect-scrollbar/css/custom-theme.css?ver=6.3.1' type='text/css' media='all' />
+    <link rel='stylesheet' id='woosc-frontend-css' href='https://klbtheme.com/bacola/wp-content/plugins/woo-smart-compare/assets/css/frontend.css?ver=6.1.3' type='text/css' media='all' />
+    <link rel='preload' as='font' type='font/woff2' crossorigin='anonymous' id='tinvwl-webfont-font-css' href='https://klbtheme.com/bacola/wp-content/plugins/ti-woocommerce-wishlist/assets/fonts/tinvwl-webfont.woff2?ver=xu2uyi' media='all' />
+    <link rel='stylesheet' id='tinvwl-webfont-css' href='https://klbtheme.com/bacola/wp-content/plugins/ti-woocommerce-wishlist/assets/css/webfont.min.css?ver=2.7.4' type='text/css' media='all' />
+    <link rel='stylesheet' id='tinvwl-css' href='https://klbtheme.com/bacola/wp-content/plugins/ti-woocommerce-wishlist/assets/css/public.min.css?ver=2.7.4' type='text/css' media='all' />
+    <link rel='stylesheet' id='bootstrap-css' href='https://klbtheme.com/bacola/wp-content/themes/bacola/assets/css/bootstrap.min.css?ver=1.0' type='text/css' media='all' />
+    <link rel='stylesheet' id='select2-css' href='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/assets/css/select2.css?ver=8.0.3' type='text/css' media='all' />
+    <link rel='stylesheet' id='bacola-base-css' href='https://klbtheme.com/bacola/wp-content/themes/bacola/assets/css/base.css?ver=1.0' type='text/css' media='all' />
+    <link rel='stylesheet' id='bacola-font-dmsans-css' href='//fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&#038;subset=latin,latin-ext' type='text/css' media='all' />
+    <link rel='stylesheet' id='bacola-font-crimson-css' href='//fonts.googleapis.com/css2?family=Dosis:wght@200;300;400;500;600;700;800&#038;subset=latin,latin-ext' type='text/css' media='all' />
+    <link rel='stylesheet' id='bacola-style-css' href='https://klbtheme.com/bacola/wp-content/themes/bacola/style.css?ver=6.3.1' type='text/css' media='all' />
+    <link rel='stylesheet' id='elementor-icons-css' href='https://klbtheme.com/bacola/wp-content/plugins/elementor/assets/lib/eicons/css/elementor-icons.min.css?ver=5.21.0' type='text/css' media='all' />
+    <link rel='stylesheet' id='elementor-frontend-css' href='https://klbtheme.com/bacola/wp-content/plugins/elementor/assets/css/frontend.min.css?ver=3.15.3' type='text/css' media='all' />
+    <style id='elementor-frontend-inline-css' type='text/css'>
+        .elementor-kit-11 {
+            --e-global-color-primary: #6EC1E4;
+            --e-global-color-secondary: #54595F;
+            --e-global-color-text: #7A7A7A;
+            --e-global-color-accent: #61CE70;
+            --e-global-typography-primary-font-family: "Roboto";
+            --e-global-typography-primary-font-weight: 600;
+            --e-global-typography-secondary-font-family: "Roboto Slab";
+            --e-global-typography-secondary-font-weight: 400;
+            --e-global-typography-text-font-family: "Roboto";
+            --e-global-typography-text-font-weight: 400;
+            --e-global-typography-accent-font-family: "Roboto";
+            --e-global-typography-accent-font-weight: 500;
+        }
+
+        .elementor-section.elementor-section-boxed > .elementor-container {
+            max-width: 1200px;
+        }
+
+        .e-con {
+            --container-max-width: 1200px;
+        }
+
+        .elementor-widget:not(:last-child) {
+            margin-bottom: 20px;
+        }
+
+        .elementor-element {
+            --widgets-spacing: 20px;
+        }
+
+        {
+        }
+
+        h1.entry-title {
+            display: var(--page-title-display);
+        }
+
+        @@media(max-width:1024px) {
+            .elementor-section.elementor-section-boxed > .elementor-container {
+                max-width: 1024px;
+            }
+
+            .e-con {
+                --container-max-width: 1024px;
+            }
+        }
+
+        @@media(max-width:767px) {
+            .elementor-section.elementor-section-boxed > .elementor-container {
+                max-width: 767px;
+            }
+
+            .e-con {
+                --container-max-width: 767px;
+            }
+        }
+
+        .elementor-50 .elementor-element.elementor-element-a406213 > .elementor-container {
+            min-height: 516px;
+        }
+
+        .elementor-50 .elementor-element.elementor-element-a406213 {
+            padding: 15px 0px 0px 0px;
+        }
+
+        .elementor-50 .elementor-element.elementor-element-057d4fb {
+            margin-top: 10px;
+            margin-bottom: 0px;
+        }
+
+        .elementor-50 .elementor-element.elementor-element-80d9e2d > .elementor-widget-wrap > .elementor-widget:not(.elementor-widget__width-auto):not(.elementor-widget__width-initial):not(:last-child):not(.elementor-absolute) {
+            margin-bottom: 50px;
+        }
+
+        .elementor-50 .elementor-element.elementor-element-9a40b7e > .elementor-widget-wrap > .elementor-widget:not(.elementor-widget__width-auto):not(.elementor-widget__width-initial):not(:last-child):not(.elementor-absolute) {
+            margin-bottom: 30px;
+        }
+
+        .elementor-50 .elementor-element.elementor-element-2ce0c75 .banner-wrapper {
+            background-color: #F8EFEA;
+        }
+
+        .elementor-50 .elementor-element.elementor-element-1dbaee9 .module-banner.simple-text a {
+            background-color: #FFEEF2;
+        }
+
+        .elementor-50 .elementor-element.elementor-element-1dbaee9 .module-purchase-banner a {
+            background-color: #FFEEF2;
+        }
+
+        .elementor-50 .elementor-element.elementor-element-1dbaee9 .module-body .purchase-text, .elementor-50 .elementor-element.elementor-element-1dbaee9 .module-body a {
+            color: #ed174a;
+        }
+
+        .elementor-50 .elementor-element.elementor-element-ee6fc62 > .elementor-element-populated {
+            padding: 0px 15px 0px 0px;
+        }
+
+        .elementor-50 .elementor-element.elementor-element-2da7cde .module-banner .banner-content .entry-title {
+            color: #3e445a;
+        }
+
+        .elementor-50 .elementor-element.elementor-element-2da7cde .module-banner .banner-content .discount-text, .elementor-50 .elementor-element.elementor-element-2da7cde .module-banner .banner-content .entry-subtitle.xlight {
+            color: #00b853;
+        }
+
+        .elementor-50 .elementor-element.elementor-element-2da7cde .module-banner .banner-content .entry-text {
+            color: #9b9bb4;
+        }
+
+        .elementor-50 .elementor-element.elementor-element-e18d393 > .elementor-element-populated {
+            padding: 0px 0px 0px 15px;
+        }
+
+        .elementor-50 .elementor-element.elementor-element-443c6d2 .module-banner .banner-content .entry-title {
+            color: #3e445a;
+        }
+
+        .elementor-50 .elementor-element.elementor-element-443c6d2 .module-banner .banner-content .discount-text, .elementor-50 .elementor-element.elementor-element-443c6d2 .module-banner .banner-content .entry-subtitle.xlight {
+            color: #00b853;
+        }
+
+        .elementor-50 .elementor-element.elementor-element-443c6d2 .module-banner .banner-content .entry-text {
+            color: #9b9bb4;
+        }
+
+        .elementor-50 .elementor-element.elementor-element-11e6391 {
+            margin-top: 10px;
+            margin-bottom: 0px;
+        }
+
+        .elementor-50 .elementor-element.elementor-element-aa8f598 > .elementor-element-populated {
+            padding: 15px 15px 0px 15px;
+        }
+
+        body.elementor-page-50 .container {
+            max-width: 1200px;
+        }
+
+        body.elementor-page-50 .elementor-section.elementor-section-boxed > .elementor-container {
+            max-width: 1200px;
+        }
+
+        @@media(min-width:768px) {
+            .elementor-50 .elementor-element.elementor-element-b471779 {
+                width: 25%;
+            }
+
+            .elementor-50 .elementor-element.elementor-element-c4ab63a {
+                width: 75%;
+            }
+
+            .elementor-50 .elementor-element.elementor-element-80d9e2d {
+                width: 25%;
+            }
+
+            .elementor-50 .elementor-element.elementor-element-9a40b7e {
+                width: 75%;
+            }
+        }
+
+        @@media(max-width:1024px) and (min-width:768px) {
+            .elementor-50 .elementor-element.elementor-element-b471779 {
+                width: 100%;
+            }
+
+            .elementor-50 .elementor-element.elementor-element-c4ab63a {
+                width: 100%;
+            }
+        }
+
+        @@media(max-width:1024px) {
+            .elementor-50 .elementor-element.elementor-element-a406213 > .elementor-container {
+                min-height: 0px;
+            }
+
+            .elementor-50 .elementor-element.elementor-element-80d9e2d > .elementor-widget-wrap > .elementor-widget:not(.elementor-widget__width-auto):not(.elementor-widget__width-initial):not(:last-child):not(.elementor-absolute) {
+                margin-bottom: 30px;
+            }
+        }
+
+        @@media(max-width:767px) {
+            .elementor-50 .elementor-element.elementor-element-ee6fc62 > .elementor-element-populated {
+                padding: 0px 0px 0px 0px;
+            }
+
+            .elementor-50 .elementor-element.elementor-element-e18d393 > .elementor-element-populated {
+                margin: 030px 0px 0px 0px;
+                --e-column-margin-right: 0px;
+                --e-column-margin-left: 0px;
+                padding: 0px 0px 0px 0px;
+            }
+        }
+    </style>
+    <link rel='stylesheet' id='swiper-css' href='https://klbtheme.com/bacola/wp-content/plugins/elementor/assets/lib/swiper/css/swiper.min.css?ver=5.3.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='google-fonts-1-css' href='https://fonts.googleapis.com/css?family=Roboto%3A100%2C100italic%2C200%2C200italic%2C300%2C300italic%2C400%2C400italic%2C500%2C500italic%2C600%2C600italic%2C700%2C700italic%2C800%2C800italic%2C900%2C900italic%7CRoboto+Slab%3A100%2C100italic%2C200%2C200italic%2C300%2C300italic%2C400%2C400italic%2C500%2C500italic%2C600%2C600italic%2C700%2C700italic%2C800%2C800italic%2C900%2C900italic&#038;display=auto&#038;ver=6.3.1' type='text/css' media='all' />
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <script type="text/template" id="tmpl-variation-template">
+        <div class="woocommerce-variation-description">{{{ data.variation.variation_description }}}</div>
+        <div class="woocommerce-variation-price">{{{ data.variation.price_html }}}</div>
+        <div class="woocommerce-variation-availability">{{{ data.variation.availability_html }}}</div>
+    </script>
+    <script type="text/template" id="tmpl-unavailable-variation-template">
+        <p>Sorry, this product is unavailable. Please choose a different combination.</p>
+    </script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-includes/js/jquery/jquery.min.js?ver=3.7.0' id='jquery-core-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1' id='jquery-migrate-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/plugins/bacola-core/woocommerce-filter/single-ajax/js/single-ajax.js?ver=1.0' id='klb-single-ajax-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/plugins/bacola-core/woocommerce-filter/notice-ajax/js/notice-ajax.js?ver=1.0' id='klb-notice-ajax-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/plugins/bacola-core/woocommerce-filter/back-to-top/js/back-to-top.js?ver=1.0' id='klb-back-to-top-js'></script>
+    <script type='text/javascript' id='bacola-ajax-search-js-extra'>
+        /* <![CDATA[ */
+        var bacolasearch = { "ajaxurl": "https:\/\/klbtheme.com\/bacola\/wp-admin\/admin-ajax.php" };
+        /* ]]> */
+    </script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/plugins/bacola-core/woocommerce-filter/ajax-search/js/ajax-search.js?ver=1.0' id='bacola-ajax-search-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/themes/bacola/includes/pjax/js/helpers.js?ver=1.0' id='pjax-helpers-js'></script>
+    <link rel="https://api.w.org/" href="https://klbtheme.com/bacola/wp-json/" />
+    <link rel="alternate" type="application/json" href="https://klbtheme.com/bacola/wp-json/wp/v2/pages/50" />
+    <link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://klbtheme.com/bacola/xmlrpc.php?rsd" />
+    <meta name="generator" content="WordPress 6.3.1" />
+    <meta name="generator" content="WooCommerce 8.0.3" />
+    <link rel="canonical" href="https://klbtheme.com/bacola/" />
+    <link rel='shortlink' href='https://klbtheme.com/bacola/' />
+    <link rel="alternate" type="application/json+oembed" href="https://klbtheme.com/bacola/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fklbtheme.com%2Fbacola%2F" />
+    <link rel="alternate" type="text/xml+oembed" href="https://klbtheme.com/bacola/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fklbtheme.com%2Fbacola%2F&#038;format=xml" />
+
+    <style type="text/css">
+
+
+
+        @@media(max-width:64rem) {
+            header.sticky-header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+            }
+        }
+
+
+        @@media(max-width:64rem) {
+            .single .single-content .product-type-simple form.cart {
+                position: fixed;
+                bottom: 0;
+                right: 0;
+                z-index: 9999;
+                background: #fff;
+                margin-bottom: 0;
+                padding: 15px;
+                -webkit-box-shadow: 0 -2px 5px rgb(0 0 0 / 7%);
+                box-shadow: 0 -2px 5px rgb(0 0 0 / 7%);
+                justify-content: space-between;
+            }
+
+            .single .woocommerce-variation-add-to-cart {
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                right: 0;
+                z-index: 9999;
+                background: #fff;
+                margin-bottom: 0;
+                padding: 15px;
+                -webkit-box-shadow: 0 -2px 5px rgb(0 0 0 / 7%);
+                box-shadow: 0 -2px 5px rgb(0 0 0 / 7%);
+                justify-content: space-between;
+                width: 100%;
+                flex-wrap: wrap;
+            }
+        }
+
+
+        :root {
+            --color-primary: #233a95;
+        }
+
+        :root {
+            --color-secondary: #2bbef9;
+        }
+
+
+
+
+
+
+
+        .site-header .header-top {
+            background-color:;
+            color: #3e445a;
+        }
+
+        .header-main.header-wrapper, .site-header .header-nav {
+            background-color: #ffffff;
+        }
+
+        .site-header .header-top .site-menu .menu .menu-item:hover > a {
+            color: #2bbef9;
+        }
+
+        .site-location a {
+            background-color: #ffffff;
+            color: #3e445a;
+            border-color: #d9d9e9;
+        }
+
+            .site-location a:hover {
+                background-color: #ffffff;
+                color: #3e445a;
+                border-color: #d9d9e9;
+            }
+
+            .site-location a .current-location {
+                color: #233a95;
+            }
+
+                .site-location a .current-location:hover {
+                    color: #233a95;
+                }
+
+            .site-location a:after {
+                color: #233a95;
+            }
+
+        .site-header .header-main .header-search .dgwt-wcas-search-form input[type="search"] {
+            background-color: #f3f4f7;
+            color: #202435;
+            border-color: #f3f4f7;
+        }
+
+        .dgwt-wcas-sf-wrapp:after {
+            color: #202435;
+        }
+
+        .site-header .header-buttons .header-login.bordered .button-icon {
+            background-color: #ffffff;
+            border-color: #e2e4ec;
+        }
+
+            .site-header .header-buttons .header-login.bordered .button-icon i {
+                color: #3e445a;
+            }
+
+        .header-cart .cart-price bdi {
+            color: #202435;
+        }
+
+        @@media screen and (min-width: 48rem) {
+            .site-header .header-buttons .bordered.header-cart .button-icon {
+                background-color: #fff1ee;
+                border-color: #fff1ee;
+            }
+        }
+
+        @@media screen and (min-width: 48rem) {
+            .site-header .header-buttons .bordered.header-cart .button-icon i {
+                color: #ea2b0f;
+            }
+        }
+
+        .site-header .header-buttons .cart-count-icon {
+            background-color: #ea2b0f;
+            color: #ffffff;
+        }
+
+        .menu-list li.link-parent > a {
+            color: #3e445a;
+        }
+
+            .menu-list li.link-parent > a:hover {
+                color: #2bbef9;
+            }
+
+        .site-header .all-categories .dropdown-categories {
+            background-color: #ffffff;
+            border-color: #e4e5ee;
+        }
+
+        .site-header .all-categories > a {
+            background-color: #2bbef9;
+            color: #ffffff;
+        }
+
+            .site-header .all-categories > a i, .site-header .all-categories > a:after {
+                color: #ffffff;
+            }
+
+            .site-header .all-categories > a .description {
+                background-color:;
+                border-color: #ffffff;
+                color:;
+            }
+
+        .site-header .primary-menu .menu > .menu-item > a, .site-header .primary-menu .menu .sub-menu .menu-item > a {
+            color: #3e445a;
+        }
+
+            .site-header .primary-menu .menu > .menu-item > a:hover, .site-header .primary-menu .menu .sub-menu .menu-item:hover > a, .site-header .primary-menu .menu > .menu-item:hover > a {
+                color: #2bbef9;
+            }
+
+        .site-footer .footer-iconboxes {
+            background-color: #f7f8fd;
+        }
+
+            .site-footer .footer-iconboxes .iconbox {
+                color: #000000;
+            }
+
+                .site-footer .footer-iconboxes .iconbox:hover {
+                    color: #000000;
+                }
+
+        .site-footer .footer-widgets {
+            background-color: #f7f8fd;
+        }
+
+        .klbfooterwidget ul a {
+            color: #71778e
+        }
+
+            .klbfooterwidget ul a:hover {
+                color: #71778e
+            }
+
+        .klbfooterwidget h4.widget-title {
+            color: #202435
+        }
+
+            .klbfooterwidget h4.widget-title:hover {
+                color: #202435
+            }
+
+        .site-footer .footer-contacts .site-phone .phone-icon {
+            background-color:;
+            color: #202435
+        }
+
+        .site-footer .footer-contacts .site-phone .entry-title, .site-footer .footer-contacts .site-mobile-app .app-content .entry-title {
+            color: #202435
+        }
+
+            .site-footer .footer-contacts .site-phone .entry-title:hover, .site-footer .footer-contacts .site-mobile-app .app-content .entry-title:hover {
+                color:
+            }
+
+        .site-footer .footer-contacts .site-phone span, .site-footer .footer-contacts .site-mobile-app .app-content span {
+            color: #202435
+        }
+
+            .site-footer .footer-contacts .site-phone span:hover, .site-footer .footer-contacts .site-mobile-app .app-content span:hover {
+                color:
+            }
+
+        .site-social ul a {
+            background-color: #ffffff;
+            color: #233a95
+        }
+
+        .site-footer .footer-contacts {
+            background-color: #ffffff;
+        }
+
+        .site-footer .footer-bottom {
+            background-color: #ffffff;
+        }
+
+            .site-copyright, .site-footer .footer-bottom .footer-menu li a {
+                color: #9b9bb4
+            }
+
+                .site-copyright:hover, .site-footer .footer-bottom .footer-menu li a:hover {
+                    color: #9b9bb4
+                }
+
+        .site-footer .footer-subscribe {
+            background-color:;
+            color:
+        }
+
+            .site-footer .footer-subscribe .entry-subtitle:hover, .site-footer .footer-subscribe .entry-title:hover, .site-footer .footer-subscribe .entry-teaser p:hover, .site-footer .footer-subscribe .form-wrapper:hover {
+                color:
+            }
+
+
+        .site-header .header-mobile-nav .menu-item a span {
+            color:
+        }
+
+            .site-header .header-mobile-nav .menu-item a span:hover {
+                color:
+            }
+
+        .site-header .header-mobile-nav .menu-item a i {
+            color:
+        }
+
+            .site-header .header-mobile-nav .menu-item a i:hover {
+                color:
+            }
+
+        .site-header .header-mobile-nav {
+            background-color:;
+        }
+
+        .site-header .primary-menu .menu > .menu-item.current-menu-item > a {
+            color: #2bbef9;
+        }
+
+        .site-header .primary-menu .menu > .menu-item.current-menu-item > a,
+        .site-header .primary-menu .menu > .menu-item:hover > a {
+            background-color: #f0faff;
+        }
+
+        .site-canvas .canvas-menu .menu .menu-item a {
+            color:;
+        }
+
+        .site-canvas .canvas-menu .menu .menu-item.active > a {
+            color:;
+        }
+
+        .site-canvas .canvas-menu .menu .menu-item + .menu-item,
+        .site-canvas .canvas-menu {
+            border-color:;
+        }
+
+        .site-canvas .canvas-footer .site-copyright {
+            color:;
+        }
+
+        .site-canvas .canvas-title .entry-title {
+            color:;
+        }
+    </style>
+    <noscript>
+        <style>            .woocommerce-product-gallery {
+                opacity: 1 !important;
+            }</style>
+    </noscript>
+    <meta name="generator" content="Elementor 3.15.3; features: e_dom_optimization, e_optimized_assets_loading, additional_custom_breakpoints; settings: css_print_method-internal, google_font-enabled, font_display-auto">
+    <link rel="icon" href="https://klbtheme.com/bacola/wp-content/uploads/2021/08/favicon.png" sizes="32x32" />
+    <link rel="icon" href="https://klbtheme.com/bacola/wp-content/uploads/2021/08/favicon.png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="https://klbtheme.com/bacola/wp-content/uploads/2021/08/favicon.png" />
+    <meta name="msapplication-TileImage" content="https://klbtheme.com/bacola/wp-content/uploads/2021/08/favicon.png" />
+    <style id="kirki-inline-styles">        .site-header .header-main .site-brand img.desktop-logo {
+            width: 164px;
+        }
+
+        .site-header .header-main .site-brand img.mobile-logo {
+            width: 93px;
+        }
+
+        .site-canvas .canvas-header .site-brand img {
+            width: 127px;
+        }
+
+        .site-header .header-top {
+            font-size: 12px;
+        }
+
+        .site-header .header-mobile-nav .menu-item a span {
+            font-size: 10px;
+        }</style>
+</head>
+
+
+@* <body class="@BitCss.Class.Color.Background.Primary @BitCss.Class.Color.Foreground.Primary"> *@
+<body class="home page-template-default page page-id-50 theme-bacola woocommerce-no-js tinvwl-theme-style  elementor-default elementor-kit-11 elementor-page elementor-page-50">
+
+    <div id="app-container">
+        @if (isSpa || isPwa || noPrerender)
+        {
+            <component type="typeof(BitTodo.Client.Core.Shared.LoadingComponent)" param-Color="@("#000")" render-mode="@RenderMode.Static" />
+        }
+        <link rel="stylesheet" href="_content/Bit.BlazorUI/styles/bit.blazorui.css" asp-append-version=true />
+        <link rel="stylesheet" href="_content/Bit.BlazorUI.Icons/styles/bit.blazorui.icons.css" asp-append-version=true />
+        <link rel="stylesheet" href="_content/Bit.BlazorUI.Assets/styles/bit.blazorui.assets.css" asp-append-version=true />
+        <link rel="stylesheet" href="_content/BitTodo.Client.Core/styles/app.css" asp-append-version=true />
+        <link href="_content/BitTodo.Client.Core/BitTodo.Client.Core.bundle.scp.css" rel="stylesheet" asp-append-version=true />
+
+        <!-- site-canvas -->
+        <div class="site-canvas">
+            <div class="site-scroll">
+                <div class="canvas-header">
+                    <div class="site-brand">
+                        <a href="https://klbtheme.com/bacola/" title="Bacola &#8211; Grocery Market and Food Theme">
+                            <img src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/bacola-logo.png" alt="Bacola &#8211; Grocery Market and Food Theme">
+                        </a>
+                    </div>
+                    <!-- site-brand -->
+                    <div class="close-canvas">
+                        <i class="klbth-icon-x"></i>
+                    </div>
+                    <!-- close-canvas -->
+                </div>
+                <!-- canvas-header -->
+                <div class="canvas-main">
+                    <div class="site-location">
+                        <a href="#">
+                            <span class="location-description">Your Location</span>
+                            <div class="current-location">Select a Location</div>
+                        </a>
+                    </div>
+                    <div class="all-categories locked">
+                        <a href="#" data-toggle="collapse" data-target="#all-categories">
+                            <i class="klbth-icon-menu-thin"></i>
+                            <span class="text">ALL CATEGORIES</span>
+                            <div class="description">TOTAL 63 PRODUCTS</div>
+                        </a>
+                        <div class="dropdown-categories collapse show" id="all-categories">
+                            <ul id="menu-sidebar-menu" class="menu-list">
+                                <li class="category-parent parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-has-children">
+                                    <a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/"><i class="klbth-icon-apple-juice"></i>Fruits &amp; Vegetables</a>
+                                    <ul class="sub-menu">
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/cuts-sprouts/">Cuts &amp; Sprouts</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/exotic-fruits-veggies/">Exotic Fruits &amp; Veggies</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/fresh-fruits/">Fresh Fruits</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/fresh-vegetables/">Fresh Vegetables</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/herbs-seasonings/">Herbs &amp; Seasonings</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/packaged-produce/">Packaged Produce</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/party-trays/">Party Trays</a></li>
+                                    </ul>
+                                </li>
+                                <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/meats-seafood/"><i class="klbth-icon-meat"></i> Meats &amp; Seafood</a></li>
+                                <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/breakfast-dairy/"><i class="klbth-icon-boiled-egg"></i> Breakfast &amp; Dairy</a></li>
+                                <li class="category-parent parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-has-children">
+                                    <a href="https://klbtheme.com/bacola/product-category/beverages/"><i class="klbth-icon-cup"></i> Beverages</a>
+                                    <ul class="sub-menu">
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/beverages/coffee/">Coffee</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/beverages/craft-beer/">Craft Beer</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/beverages/drink-boxes-pouches/">Drink Boxes &amp; Pouches</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/beverages/milk-plant-based-milk/">Milk &amp; Plant-Based Milk</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/beverages/soda-pop/">Soda &amp; Pop</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/beverages/sparkling-water/">Sparkling Water</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/beverages/tea-kombucha/">Tea &amp; Kombucha</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/beverages/water/">Water</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/beverages/wine/">Wine</a></li>
+                                    </ul>
+                                </li>
+                                <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/breads-bakery/"><i class="klbth-icon-biscuit"></i> Breads &amp; Bakery</a></li>
+                                <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/frozen-foods/"><i class="klbth-icon-snowflake"></i> Frozen Foods</a></li>
+                                <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/biscuits-snacks/"><i class="klbth-icon-candy"></i> Biscuits &amp; Snacks</a></li>
+                                <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/grocery-staples/"><i class="klbth-icon-vegan"></i> Grocery &amp; Staples</a></li>
+                                <li class="link-parent  menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/?on_sale=onsale"><i class="bottom"></i> Value of the Day</a></li>
+                                <li class="link-parent  menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/?filter_cat=58,35,31"><i class="bottom"></i> Top 100 Offers</a></li>
+                                <li class="link-parent  menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/"><i class="bottom"></i> New Arrivals</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="canvas-title">
+                        <h6 class="entry-title">Site Navigation</h6>
+                    </div>
+                    <!-- canvas-title -->
+                    <nav class="canvas-menu canvas-primary vertical">
+                        <ul id="menu-menu-1" class="menu">
+                            <li class="dropdown  menu-item menu-item-type-custom menu-item-object-custom current-menu-item current_page_item menu-item-home current-menu-ancestor current-menu-parent menu-item-has-children">
+                                <a href="https://klbtheme.com/bacola/">Home</a>
+                                <ul class="sub-menu">
+                                    <li class=" menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item page-item-50 current_page_item"><a href="https://klbtheme.com/bacola/">Home 1</a></li>
+                                    <li class=" menu-item menu-item-type-post_type menu-item-object-page"><a href="https://klbtheme.com/bacola/home-2/">Home 2</a></li>
+                                    <li class=" menu-item menu-item-type-post_type menu-item-object-page"><a href="https://klbtheme.com/bacola/home-3/">Home 3</a></li>
+                                    <li class=" menu-item menu-item-type-post_type menu-item-object-page"><a href="https://klbtheme.com/bacola/home-4/">Home 4</a></li>
+                                    <li class=" menu-item menu-item-type-post_type menu-item-object-page"><a href="https://klbtheme.com/bacola/home-5/">Home 5</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown mega-menu menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children">
+                                <a href="https://klbtheme.com/bacola/shop/">Shop</a>
+                                <ul class="sub-menu">
+                                    <li class="dropdown  menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children">
+                                        <a href="https://klbtheme.com/bacola/shop/">Shop Lists</a>
+                                        <ul class="sub-menu">
+                                            <li class=" menu-item menu-item-type-post_type menu-item-object-page"><a href="https://klbtheme.com/bacola/shop/">Shop Default</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/?opt=right-sidebar">Shop Right Sidebar</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/?column=5&amp;opt=wide">Shop Wide</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/?shop_view=list_view">List Left Sidebar</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/?ft=load-more">Load More Button</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/?ft=infinite">Infinite Scrolling</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown  menu-item menu-item-type-post_type menu-item-object-product menu-item-has-children">
+                                        <a href="https://klbtheme.com/bacola/product/all-natural-italian-style-chicken-meatballs/">Product Detail</a>
+                                        <ul class="sub-menu">
+                                            <li class=" menu-item menu-item-type-post_type menu-item-object-product"><a href="https://klbtheme.com/bacola/product/all-natural-italian-style-chicken-meatballs/">Product Default</a></li>
+                                            <li class=" menu-item menu-item-type-post_type menu-item-object-product"><a href="https://klbtheme.com/bacola/product/tomatoes-on-the-vine/">Product Variable</a></li>
+                                            <li class=" menu-item menu-item-type-post_type menu-item-object-product"><a href="https://klbtheme.com/bacola/product/foster-farms-takeout-crispy-classic-buffalo-wings/">Product Grouped</a></li>
+                                            <li class=" menu-item menu-item-type-post_type menu-item-object-product"><a href="https://klbtheme.com/bacola/product/zevia-kidz-strawberry-lemonade-zero-calorie-soda/">Product External</a></li>
+                                            <li class=" menu-item menu-item-type-post_type menu-item-object-product"><a href="https://klbtheme.com/bacola/product/vital-farms-pasture-raised-egg-bites-bacon-cheddar/">Product Downloadable</a></li>
+                                            <li class=" menu-item menu-item-type-post_type menu-item-object-product"><a href="https://klbtheme.com/bacola/product/angies-boomchickapop-sweet-salty-kettle-corn/">Product With Video</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown  menu-item menu-item-type-post_type menu-item-object-product menu-item-has-children">
+                                        <a href="https://klbtheme.com/bacola/product/all-natural-italian-style-chicken-meatballs/">Product Types</a>
+                                        <ul class="sub-menu">
+                                            <li class=" menu-item menu-item-type-post_type menu-item-object-product"><a href="https://klbtheme.com/bacola/product/all-natural-italian-style-chicken-meatballs/">Single Type 1</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/product/angies-boomchickapop-sweet-salty-kettle-corn/?opt=type2">Single Type 2</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/product/blue-diamond-almonds-lightly-salted/?opt=type3">Single Type 3</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/product/organic-white-corn-tortilla-chips/?opt=type4">Single Type 4</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/product/all-natural-italian-style-chicken-meatballs/?opt=vertical">Thumbnails Left</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/product/organic-white-corn-tortilla-chips/?ft=imgzoom">Zoom Image</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown  menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children">
+                                        <a href="#">Shop Pages</a>
+                                        <ul class="sub-menu">
+                                            <li class=" menu-item menu-item-type-post_type menu-item-object-page"><a href="https://klbtheme.com/bacola/cart/">Cart</a></li>
+                                            <li class=" menu-item menu-item-type-post_type menu-item-object-page"><a href="https://klbtheme.com/bacola/checkout/">Checkout</a></li>
+                                            <li class=" menu-item menu-item-type-post_type menu-item-object-page"><a href="https://klbtheme.com/bacola/my-account/">My account</a></li>
+                                            <li class=" menu-item menu-item-type-post_type menu-item-object-page"><a href="https://klbtheme.com/bacola/wishlist/">Wishlist</a></li>
+                                            <li class=" menu-item menu-item-type-post_type menu-item-object-page"><a href="https://klbtheme.com/bacola/order-tracking/">Order Tracking</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/product/blue-diamond-almonds-lightly-salted/?ft=orderonwhatsapp">Order on WhatsApp</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown  menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children">
+                                        <a href="#">Shop Layouts</a>
+                                        <ul class="sub-menu">
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/?column=2">Two Columns</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/?column=3">Three Columns</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/?column=3&amp;opt=wide">Three Columns Wide</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/?column=4">Four Columns</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/?column=4&amp;opt=wide">Four Columns Wide</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/?column=5&amp;opt=wide">Five Columns wide</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class=" menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/meats-seafood/"><i class="klbth-icon-meat"></i> Meats &amp; Seafood</a></li>
+                            <li class=" menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/breads-bakery/"><i class="klbth-icon-biscuit"></i> Bakery</a></li>
+                            <li class=" menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/beverages/"><i class="klbth-icon-cup"></i> Beverages</a></li>
+                            <li class=" menu-item menu-item-type-post_type menu-item-object-page"><a href="https://klbtheme.com/bacola/blog/">Blog</a></li>
+                            <li class=" menu-item menu-item-type-post_type menu-item-object-page"><a href="https://klbtheme.com/bacola/contact/">Contact</a></li>
+                        </ul>
+                    </nav>
+                    <!-- site-menu -->
+                </div>
+                <!-- canvas-main -->
+                <div class="canvas-footer">
+                    <div class="site-copyright">
+                        Copyright 2023 © Bacola WordPress Theme. All rights reserved. Powered by KlbTheme.
+                    </div>
+                    <!-- site-copyright -->
+                    <nav class="canvas-menu canvas-secondary select-language vertical">
+                        <ul id="menu-top-right" class="menu">
+                            <li id="menu-item-1832" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1832">
+                                <a href="#">English</a>
+                                <ul class="sub-menu">
+                                    <li id="menu-item-1838" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1838"><a href="#">English</a></li>
+                                    <li id="menu-item-1833" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1833"><a href="#">Spanish</a></li>
+                                    <li id="menu-item-1834" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1834"><a href="#">German</a></li>
+                                </ul>
+                            </li>
+                            <li id="menu-item-1835" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1835">
+                                <a href="#">USD</a>
+                                <ul class="sub-menu">
+                                    <li id="menu-item-1839" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1839"><a href="#">USD</a></li>
+                                    <li id="menu-item-1836" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1836"><a href="#">INR</a></li>
+                                    <li id="menu-item-1837" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1837"><a href="#">GBP</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                    <!-- site-menu -->
+                </div>
+                <!-- canvas-footer -->
+            </div>
+            <!-- site-scroll -->
+        </div>
+
+
+        <aside class="store-notice">
+            <div class="container">
+                Due to the <strong>COVID 19</strong> epidemic, orders may be processed with a slight delay
+            </div>
+        </aside>
+
+        <header id="masthead" class="site-header desktop-shadow-disable mobile-shadow-enable mobile-nav-enable" itemscope="itemscope" itemtype="http://schema.org/WPHeader">
+            <div class="header-top header-wrapper hide-mobile">
+                <div class="container">
+                    <div class="column column-left">
+                        <nav class="site-menu horizontal">
+                            <ul id="menu-top-left" class="menu">
+                                <li id="menu-item-1893" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1893"><a href="https://klbtheme.com/bacola/about-us/">About Us</a></li>
+                                <li id="menu-item-1892" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1892"><a href="https://klbtheme.com/bacola/my-account/">My account</a></li>
+                                <li id="menu-item-1891" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1891"><a href="https://klbtheme.com/bacola/wishlist/">Wishlist</a></li>
+                                <li id="menu-item-1890" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1890"><a href="https://klbtheme.com/bacola/order-tracking/">Order Tracking</a></li>
+                            </ul>
+                        </nav>
+                        <!-- site-menu -->
+                    </div>
+                    <!-- column-left -->
+                    <div class="column column-right">
+                        <div class="topbar-notice">
+                            <i class="klbth-icon-secure"></i>
+                            <span>100% Secure delivery without contacting the courier</span>
+                        </div>
+                        <div class="text-content">
+                            Need help? Call Us: <a href="tel:0020500"><strong style="color: #2bbef9">+ 0020 500</strong></a>
+                        </div>
+                        <div class="header-switchers">
+                            <nav class="store-language site-menu horizontal">
+                                <ul id="menu-top-right-1" class="menu">
+                                    <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1832">
+                                        <a href="#">English</a>
+                                        <ul class="sub-menu">
+                                            <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1838"><a href="#">English</a></li>
+                                            <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1833"><a href="#">Spanish</a></li>
+                                            <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1834"><a href="#">German</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1835">
+                                        <a href="#">USD</a>
+                                        <ul class="sub-menu">
+                                            <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1839"><a href="#">USD</a></li>
+                                            <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1836"><a href="#">INR</a></li>
+                                            <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1837"><a href="#">GBP</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </nav>
+                            <!-- site-menu -->
+                        </div>
+                        <!-- header-switchers -->
+                    </div>
+                    <!-- column-right -->
+                </div>
+                <!-- container -->
+            </div>
+            <!-- header-top -->
+            <div class="header-main header-wrapper">
+                <div class="container">
+                    <div class="column column-left">
+                        <div class="header-buttons hide-desktop">
+                            <div class="header-canvas button-item">
+                                <a href="#">
+                                    <i class="klbth-icon-menu-thin"></i>
+                                </a>
+                            </div>
+                            <!-- button-item -->
+                        </div>
+                        <!-- header-buttons -->
+                        <div class="site-brand">
+                            <a href="https://klbtheme.com/bacola/" title="Bacola &#8211; Grocery Market and Food Theme">
+                                <img class="desktop-logo hide-mobile" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/bacola-logo.png" alt="Bacola &#8211; Grocery Market and Food Theme">
+                                <img class="mobile-logo hide-desktop" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/bacola-logo-mobile.png" alt="Bacola &#8211; Grocery Market and Food Theme">
+                                <span class="brand-description">Online Grocery Shopping Center</span>
+                            </a>
+                        </div>
+                        <!-- site-brand -->
+                    </div>
+                    <!-- column -->
+                    <div class="column column-center">
+                        <div class="header-location site-location hide-mobile">
+                            <a href="#">
+                                <span class="location-description">Your Location</span>
+                                <div class="current-location">Select a Location</div>
+                            </a>
+                        </div>
+                        <div class="header-search">
+                            <form action="https://klbtheme.com/bacola/" class="search-form" role="search" method="get" id="searchform">
+                                <input type="search" value="" name="s" placeholder="Search for products..." autocomplete="off">
+                                <button type="submit"><i class="klbth-icon-search"></i></button>
+                                <input type="hidden" name="post_type" value="product" />
+                            </form>
+                        </div>
+                    </div>
+                    <div class="column column-right">
+                        <div class="header-buttons">
+                            <div class="header-login button-item bordered">
+                                <a href="https://klbtheme.com/bacola/my-account/">
+                                    <div class="button-icon"><i class="klbth-icon-user"></i></div>
+                                </a>
+                            </div>
+                            <div class="header-cart button-item bordered">
+                                <a href="https://klbtheme.com/bacola/cart/">
+                                    <div class="cart-price"><span class="woocommerce-Price-amount amount"><bdi><span class="woocommerce-Price-currencySymbol">&#36;</span>0.00</bdi></span></div>
+                                    <div class="button-icon"><i class="klbth-icon-shopping-bag"></i></div>
+                                    <span class="cart-count-icon">0</span>
+                                </a>
+                                <div class="cart-dropdown hide">
+                                    <div class="cart-dropdown-wrapper">
+                                        <div class="fl-mini-cart-content">
+                                            <div class="cart-empty">
+                                                <div class="empty-icon">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280.028 280.028" width="280.028" height="80.028">
+                                                        <path class="c-01" d="M35.004 0h210.02v78.758H35.004V0z" fill="#d07c40" />
+                                                        <path class="c-02" d="M262.527 61.256v201.27c0 9.626-7.876 17.502-17.502 17.502H35.004c-9.626 0-17.502-7.876-17.502-17.502V61.256h245.025z" fill="#f4b459" />
+                                                        <path class="c-03" d="M35.004 70.007h26.253V26.253L35.004 0v70.007zm183.767-43.754v43.754h26.253V0l-26.253 26.253z" fill="#f4b459" />
+                                                        <path class="c-04" d="M61.257 61.256V26.253L17.503 61.256h43.754zm157.514-35.003v35.003h43.754l-43.754-35.003z" fill="#e3911c" />
+                                                        <path class="c-05" d="M65.632 105.01c-5.251 0-8.751 3.5-8.751 8.751s3.5 8.751 8.751 8.751 8.751-3.5 8.751-8.751c0-5.25-3.5-8.751-8.751-8.751zm148.764 0c-5.251 0-8.751 3.5-8.751 8.751s3.5 8.751 8.751 8.751 8.751-3.5 8.751-8.751c.001-5.25-3.501-8.751-8.751-8.751z" fill="#cf984a" />
+                                                        <path class="c-06" d="M65.632 121.637c5.251 0 6.126 6.126 6.126 6.126 0 39.379 29.753 70.882 68.257 70.882s68.257-31.503 68.257-70.882c0 0 .875-6.126 6.126-6.126s6.126 6.126 6.126 6.126c0 46.38-35.003 83.133-80.508 83.133s-80.508-37.629-80.508-83.133c-.001-.001.874-6.126 6.124-6.126z" fill="#cf984a" />
+                                                        <path class="c-07" d="M65.632 112.886c5.251 0 6.126 6.126 6.126 6.126 0 39.379 29.753 70.882 68.257 70.882s68.257-31.503 68.257-70.882c0 0 .875-6.126 6.126-6.126s6.126 6.126 6.126 6.126c0 46.38-35.003 83.133-80.508 83.133s-80.508-37.629-80.508-83.133c-.001 0 .874-6.126 6.124-6.126z" fill="#fdfbf7" />
+                                                    </svg>
+                                                </div>
+                                                <!-- empty-icon -->
+                                                <div class="empty-text">No products in the cart.</div>
+                                            </div>
+                                            <!-- cart-empty -->
+                                        </div>
+                                        <div class="cart-noticy">
+                                            We reduce shipping prices to only 2.49 €!
+                                        </div>
+                                        <!-- cart-noticy -->
+                                    </div>
+                                    <!-- cart-dropdown-wrapper -->
+                                </div>
+                                <!-- cart-dropdown -->
+                            </div>
+                            <!-- button-item -->
+                        </div>
+                        <!-- header-buttons -->
+                    </div>
+                    <!-- column -->
+                </div>
+                <!-- container -->
+            </div>
+            <!-- header-main -->
+            <div class="header-nav header-wrapper hide-mobile">
+                <div class="container">
+                    <div class="all-categories locked">
+                        <a href="#" data-toggle="collapse" data-target="#all-categories">
+                            <i class="klbth-icon-menu-thin"></i>
+                            <span class="text">ALL CATEGORIES</span>
+                            <div class="description">TOTAL 63 PRODUCTS</div>
+                        </a>
+                        <div class="dropdown-categories collapse show" id="all-categories">
+                            <ul id="menu-sidebar-menu-1" class="menu-list">
+                                <li class="category-parent parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-has-children">
+                                    <a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/"><i class="klbth-icon-apple-juice"></i>Fruits &amp; Vegetables</a>
+                                    <ul class="sub-menu">
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/cuts-sprouts/">Cuts &amp; Sprouts</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/exotic-fruits-veggies/">Exotic Fruits &amp; Veggies</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/fresh-fruits/">Fresh Fruits</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/fresh-vegetables/">Fresh Vegetables</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/herbs-seasonings/">Herbs &amp; Seasonings</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/packaged-produce/">Packaged Produce</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/party-trays/">Party Trays</a></li>
+                                    </ul>
+                                </li>
+                                <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/meats-seafood/"><i class="klbth-icon-meat"></i> Meats &amp; Seafood</a></li>
+                                <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/breakfast-dairy/"><i class="klbth-icon-boiled-egg"></i> Breakfast &amp; Dairy</a></li>
+                                <li class="category-parent parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-has-children">
+                                    <a href="https://klbtheme.com/bacola/product-category/beverages/"><i class="klbth-icon-cup"></i> Beverages</a>
+                                    <ul class="sub-menu">
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/beverages/coffee/">Coffee</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/beverages/craft-beer/">Craft Beer</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/beverages/drink-boxes-pouches/">Drink Boxes &amp; Pouches</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/beverages/milk-plant-based-milk/">Milk &amp; Plant-Based Milk</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/beverages/soda-pop/">Soda &amp; Pop</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/beverages/sparkling-water/">Sparkling Water</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/beverages/tea-kombucha/">Tea &amp; Kombucha</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/beverages/water/">Water</a></li>
+                                        <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/beverages/wine/">Wine</a></li>
+                                    </ul>
+                                </li>
+                                <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/breads-bakery/"><i class="klbth-icon-biscuit"></i> Breads &amp; Bakery</a></li>
+                                <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/frozen-foods/"><i class="klbth-icon-snowflake"></i> Frozen Foods</a></li>
+                                <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/biscuits-snacks/"><i class="klbth-icon-candy"></i> Biscuits &amp; Snacks</a></li>
+                                <li class="category-parent  menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/grocery-staples/"><i class="klbth-icon-vegan"></i> Grocery &amp; Staples</a></li>
+                                <li class="link-parent  menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/?on_sale=onsale"><i class="bottom"></i> Value of the Day</a></li>
+                                <li class="link-parent  menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/?filter_cat=58,35,31"><i class="bottom"></i> Top 100 Offers</a></li>
+                                <li class="link-parent  menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/"><i class="bottom"></i> New Arrivals</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <nav class="site-menu primary-menu horizontal">
+                        <ul id="menu-menu-2" class="menu">
+                            <li class="dropdown  menu-item menu-item-type-custom menu-item-object-custom current-menu-item current_page_item menu-item-home current-menu-ancestor current-menu-parent menu-item-has-children">
+                                <a href="https://klbtheme.com/bacola/">Home</a>
+                                <ul class="sub-menu">
+                                    <li class=" menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item page-item-50 current_page_item"><a href="https://klbtheme.com/bacola/">Home 1</a></li>
+                                    <li class=" menu-item menu-item-type-post_type menu-item-object-page"><a href="https://klbtheme.com/bacola/home-2/">Home 2</a></li>
+                                    <li class=" menu-item menu-item-type-post_type menu-item-object-page"><a href="https://klbtheme.com/bacola/home-3/">Home 3</a></li>
+                                    <li class=" menu-item menu-item-type-post_type menu-item-object-page"><a href="https://klbtheme.com/bacola/home-4/">Home 4</a></li>
+                                    <li class=" menu-item menu-item-type-post_type menu-item-object-page"><a href="https://klbtheme.com/bacola/home-5/">Home 5</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown mega-menu menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children">
+                                <a href="https://klbtheme.com/bacola/shop/">Shop</a>
+                                <ul class="sub-menu">
+                                    <li class="dropdown  menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children">
+                                        <a href="https://klbtheme.com/bacola/shop/">Shop Lists</a>
+                                        <ul class="sub-menu">
+                                            <li class=" menu-item menu-item-type-post_type menu-item-object-page"><a href="https://klbtheme.com/bacola/shop/">Shop Default</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/?opt=right-sidebar">Shop Right Sidebar</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/?column=5&amp;opt=wide">Shop Wide</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/?shop_view=list_view">List Left Sidebar</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/?ft=load-more">Load More Button</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/?ft=infinite">Infinite Scrolling</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown  menu-item menu-item-type-post_type menu-item-object-product menu-item-has-children">
+                                        <a href="https://klbtheme.com/bacola/product/all-natural-italian-style-chicken-meatballs/">Product Detail</a>
+                                        <ul class="sub-menu">
+                                            <li class=" menu-item menu-item-type-post_type menu-item-object-product"><a href="https://klbtheme.com/bacola/product/all-natural-italian-style-chicken-meatballs/">Product Default</a></li>
+                                            <li class=" menu-item menu-item-type-post_type menu-item-object-product"><a href="https://klbtheme.com/bacola/product/tomatoes-on-the-vine/">Product Variable</a></li>
+                                            <li class=" menu-item menu-item-type-post_type menu-item-object-product"><a href="https://klbtheme.com/bacola/product/foster-farms-takeout-crispy-classic-buffalo-wings/">Product Grouped</a></li>
+                                            <li class=" menu-item menu-item-type-post_type menu-item-object-product"><a href="https://klbtheme.com/bacola/product/zevia-kidz-strawberry-lemonade-zero-calorie-soda/">Product External</a></li>
+                                            <li class=" menu-item menu-item-type-post_type menu-item-object-product"><a href="https://klbtheme.com/bacola/product/vital-farms-pasture-raised-egg-bites-bacon-cheddar/">Product Downloadable</a></li>
+                                            <li class=" menu-item menu-item-type-post_type menu-item-object-product"><a href="https://klbtheme.com/bacola/product/angies-boomchickapop-sweet-salty-kettle-corn/">Product With Video</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown  menu-item menu-item-type-post_type menu-item-object-product menu-item-has-children">
+                                        <a href="https://klbtheme.com/bacola/product/all-natural-italian-style-chicken-meatballs/">Product Types</a>
+                                        <ul class="sub-menu">
+                                            <li class=" menu-item menu-item-type-post_type menu-item-object-product"><a href="https://klbtheme.com/bacola/product/all-natural-italian-style-chicken-meatballs/">Single Type 1</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/product/angies-boomchickapop-sweet-salty-kettle-corn/?opt=type2">Single Type 2</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/product/blue-diamond-almonds-lightly-salted/?opt=type3">Single Type 3</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/product/organic-white-corn-tortilla-chips/?opt=type4">Single Type 4</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/product/all-natural-italian-style-chicken-meatballs/?opt=vertical">Thumbnails Left</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/product/organic-white-corn-tortilla-chips/?ft=imgzoom">Zoom Image</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown  menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children">
+                                        <a href="#">Shop Pages</a>
+                                        <ul class="sub-menu">
+                                            <li class=" menu-item menu-item-type-post_type menu-item-object-page"><a href="https://klbtheme.com/bacola/cart/">Cart</a></li>
+                                            <li class=" menu-item menu-item-type-post_type menu-item-object-page"><a href="https://klbtheme.com/bacola/checkout/">Checkout</a></li>
+                                            <li class=" menu-item menu-item-type-post_type menu-item-object-page"><a href="https://klbtheme.com/bacola/my-account/">My account</a></li>
+                                            <li class=" menu-item menu-item-type-post_type menu-item-object-page"><a href="https://klbtheme.com/bacola/wishlist/">Wishlist</a></li>
+                                            <li class=" menu-item menu-item-type-post_type menu-item-object-page"><a href="https://klbtheme.com/bacola/order-tracking/">Order Tracking</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/product/blue-diamond-almonds-lightly-salted/?ft=orderonwhatsapp">Order on WhatsApp</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown  menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children">
+                                        <a href="#">Shop Layouts</a>
+                                        <ul class="sub-menu">
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/?column=2">Two Columns</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/?column=3">Three Columns</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/?column=3&amp;opt=wide">Three Columns Wide</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/?column=4">Four Columns</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/?column=4&amp;opt=wide">Four Columns Wide</a></li>
+                                            <li class=" menu-item menu-item-type-custom menu-item-object-custom"><a href="https://klbtheme.com/bacola/shop/?column=5&amp;opt=wide">Five Columns wide</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class=" menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/meats-seafood/"><i class="klbth-icon-meat"></i> Meats &amp; Seafood</a></li>
+                            <li class=" menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/breads-bakery/"><i class="klbth-icon-biscuit"></i> Bakery</a></li>
+                            <li class=" menu-item menu-item-type-taxonomy menu-item-object-product_cat"><a href="https://klbtheme.com/bacola/product-category/beverages/"><i class="klbth-icon-cup"></i> Beverages</a></li>
+                            <li class=" menu-item menu-item-type-post_type menu-item-object-page"><a href="https://klbtheme.com/bacola/blog/">Blog</a></li>
+                            <li class=" menu-item menu-item-type-post_type menu-item-object-page"><a href="https://klbtheme.com/bacola/contact/">Contact</a></li>
+                        </ul>
+                    </nav>
+                    <!-- site-menu -->
+                </div>
+                <!-- container -->
+            </div>
+            <!-- header-nav -->
+            <nav class="header-mobile-nav">
+                <div class="mobile-nav-wrapper">
+                    <ul>
+                        <li class="menu-item">
+                            <a href="https://klbtheme.com/bacola/shop/" class="store">
+                                <i class="klbth-icon-store"></i>
+                                <span>Store</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#" class="search">
+                                <i class="klbth-icon-search"></i>
+                                <span>Search</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="https://klbtheme.com/bacola/wishlist/" class="wishlist">
+                                <i class="klbth-icon-heart-1"></i>
+                                <span>Wishlist</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="https://klbtheme.com/bacola/my-account/" class="user">
+                                <i class="klbth-icon-user"></i>
+                                <span>Account</span>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="#" class="categories">
+                                <i class="klbth-icon-menu-thin"></i>
+                                <span>Categories</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- mobile-nav-wrapper -->
+            </nav>
+            <!-- header-mobile-nav -->
+        </header>
+        <!-- site-header -->
+        @RenderBody()
+
+        <footer class="site-footer">
+            <div class="footer-subscribe">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 col-lg-5">
+                            <div class="subscribe-content">
+                                <h6 class="entry-subtitle">$20 discount for your first order</h6>
+                                <h3 class="entry-title">Join our newsletter and get...</h3>
+                                <div class="entry-teaser">
+                                    <p>Join our email subscription now to get updates on promotions and coupons.</p>
+                                </div>
+                                <div class="form-wrapper">
+                                    <script>                                        (function () {
+                                            window.mc4wp = window.mc4wp || {
+                                                listeners: [],
+                                                forms: {
+                                                    on: function (evt, cb) {
+                                                        window.mc4wp.listeners.push(
+                                                            {
+                                                                event: evt,
+                                                                callback: cb
+                                                            }
+                                                        );
+                                                    }
+                                                }
+                                            }
+                                        })();
+                                    </script><!-- Mailchimp for WordPress v4.9.7 - https://wordpress.org/plugins/mailchimp-for-wp/ -->
+                                    <form id="mc4wp-form-1" class="mc4wp-form mc4wp-form-635" method="post" data-id="635" data-name="Bacola">
+                                        <div class="mc4wp-form-fields">
+                                            <i class="klbth-icon-mail"></i>
+                                            <input class="subscribe-input" type="email" name="EMAIL" placeholder="Your email address" required />
+                                            <input type="submit" value="Subscribe" />
+                                        </div>
+                                        <label style="display: none !important;">Leave this field empty if you're human: <input type="text" name="_mc4wp_honeypot" value="" tabindex="-1" autocomplete="off" /></label><input type="hidden" name="_mc4wp_timestamp" value="1693746934" /><input type="hidden" name="_mc4wp_form_id" value="635" /><input type="hidden" name="_mc4wp_form_element_id" value="mc4wp-form-1" />
+                                        <div class="mc4wp-response"></div>
+                                    </form>
+                                    <!-- / Mailchimp for WordPress Plugin -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-7">
+                            <div class="subscribe-image"><img src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/coupon.png" alt="subscribe"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-iconboxes">
+                <div class="container">
+                    <div class="row">
+                        <div class="col col-12 col-md-6 col-lg-3">
+                            <div class="iconbox">
+                                <div class="iconbox-icon"><i class="klbth-icon-milk-box"></i></div>
+                                <div class="iconbox-detail">
+                                    <span>Everyday fresh products</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col col-12 col-md-6 col-lg-3">
+                            <div class="iconbox">
+                                <div class="iconbox-icon"><i class="klbth-icon-delivery-truck-2"></i></div>
+                                <div class="iconbox-detail">
+                                    <span>
+                                        Free delivery for order over $70
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col col-12 col-md-6 col-lg-3">
+                            <div class="iconbox">
+                                <div class="iconbox-icon"><i class="klbth-icon-discount-outline"></i></div>
+                                <div class="iconbox-detail">
+                                    <span>Daily Mega Discounts</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col col-12 col-md-6 col-lg-3">
+                            <div class="iconbox">
+                                <div class="iconbox-icon"><i class="klbth-icon-dollar"></i></div>
+                                <div class="iconbox-detail">
+                                    <span>Best price on the market</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-widgets border-enable">
+                <div class="container">
+                    <div class="row">
+                        <div class="col col-12 col-lg-3 col-five">
+                            <div class="klbfooterwidget widget widget_nav_menu">
+                                <h4 class="widget-title">FRUIT &#038; VEGETABLES</h4>
+                                <div class="menu-fruits-and-vegetables-container">
+                                    <ul id="menu-fruits-and-vegetables" class="menu">
+                                        <li id="menu-item-1798" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1798"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/fresh-vegetables/">Fresh Vegetables</a></li>
+                                        <li id="menu-item-1799" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1799"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/herbs-seasonings/">Herbs &amp; Seasonings</a></li>
+                                        <li id="menu-item-1797" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1797"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/fresh-fruits/">Fresh Fruits</a></li>
+                                        <li id="menu-item-1795" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1795"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/cuts-sprouts/">Cuts &amp; Sprouts</a></li>
+                                        <li id="menu-item-1796" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1796"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/exotic-fruits-veggies/">Exotic Fruits &amp; Veggies</a></li>
+                                        <li id="menu-item-1800" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1800"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/packaged-produce/">Packaged Produce</a></li>
+                                        <li id="menu-item-1801" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1801"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/party-trays/">Party Trays</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col col-12 col-lg-3 col-five">
+                            <div class="klbfooterwidget widget widget_nav_menu">
+                                <h4 class="widget-title">Breakfast &#038; Dairy</h4>
+                                <div class="menu-breakfast-dairy-container">
+                                    <ul id="menu-breakfast-dairy" class="menu">
+                                        <li id="menu-item-1807" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1807"><a href="https://klbtheme.com/bacola/product-category/breakfast-dairy/milk-flavoured-milk/">Milk &amp; Flavoured Milk</a></li>
+                                        <li id="menu-item-1802" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1802"><a href="https://klbtheme.com/bacola/product-category/breakfast-dairy/butter-and-margarine/">Butter and Margarine</a></li>
+                                        <li id="menu-item-1803" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1803"><a href="https://klbtheme.com/bacola/product-category/breakfast-dairy/cheese/">Cheese</a></li>
+                                        <li id="menu-item-1804" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1804"><a href="https://klbtheme.com/bacola/product-category/breakfast-dairy/eggs-substitutes/">Eggs Substitutes</a></li>
+                                        <li id="menu-item-1805" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1805"><a href="https://klbtheme.com/bacola/product-category/breakfast-dairy/honey/">Honey</a></li>
+                                        <li id="menu-item-1806" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1806"><a href="https://klbtheme.com/bacola/product-category/breakfast-dairy/marmalades/">Marmalades</a></li>
+                                        <li id="menu-item-1808" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1808"><a href="https://klbtheme.com/bacola/product-category/breakfast-dairy/sour-cream-and-dips/">Sour Cream and Dips</a></li>
+                                        <li id="menu-item-1809" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1809"><a href="https://klbtheme.com/bacola/product-category/breakfast-dairy/yogurt/">Yogurt</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col col-12 col-lg-3 col-five">
+                            <div class="klbfooterwidget widget widget_nav_menu">
+                                <h4 class="widget-title">Meat &#038; Seafood</h4>
+                                <div class="menu-meat-seafood-container">
+                                    <ul id="menu-meat-seafood" class="menu">
+                                        <li id="menu-item-1811" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1811"><a href="https://klbtheme.com/bacola/product-category/meats-seafood/breakfast-sausage/">Breakfast Sausage</a></li>
+                                        <li id="menu-item-1814" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1814"><a href="https://klbtheme.com/bacola/product-category/meats-seafood/dinner-sausage/">Dinner Sausage</a></li>
+                                        <li id="menu-item-1810" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1810"><a href="https://klbtheme.com/bacola/product-category/meats-seafood/beef/">Beef</a></li>
+                                        <li id="menu-item-1812" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1812"><a href="https://klbtheme.com/bacola/product-category/meats-seafood/chicken/">Chicken</a></li>
+                                        <li id="menu-item-1817" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1817"><a href="https://klbtheme.com/bacola/product-category/meats-seafood/sliced-deli-meat/">Sliced Deli Meat</a></li>
+                                        <li id="menu-item-1816" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1816"><a href="https://klbtheme.com/bacola/product-category/meats-seafood/shrimp/">Shrimp</a></li>
+                                        <li id="menu-item-1818" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1818"><a href="https://klbtheme.com/bacola/product-category/meats-seafood/wild-caught-fillets/">Wild Caught Fillets</a></li>
+                                        <li id="menu-item-1813" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1813"><a href="https://klbtheme.com/bacola/product-category/meats-seafood/crab-and-shellfish/">Crab and Shellfish</a></li>
+                                        <li id="menu-item-1815" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1815"><a href="https://klbtheme.com/bacola/product-category/meats-seafood/farm-raised-fillets/">Farm Raised Fillets</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col col-12 col-lg-3 col-five">
+                            <div class="klbfooterwidget widget widget_nav_menu">
+                                <h4 class="widget-title">Beverages</h4>
+                                <div class="menu-beverages-container">
+                                    <ul id="menu-beverages" class="menu">
+                                        <li id="menu-item-1826" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1826"><a href="https://klbtheme.com/bacola/product-category/beverages/water/">Water</a></li>
+                                        <li id="menu-item-1824" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1824"><a href="https://klbtheme.com/bacola/product-category/beverages/sparkling-water/">Sparkling Water</a></li>
+                                        <li id="menu-item-1823" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1823"><a href="https://klbtheme.com/bacola/product-category/beverages/soda-pop/">Soda &amp; Pop</a></li>
+                                        <li id="menu-item-1819" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1819"><a href="https://klbtheme.com/bacola/product-category/beverages/coffee/">Coffee</a></li>
+                                        <li id="menu-item-1822" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1822"><a href="https://klbtheme.com/bacola/product-category/beverages/milk-plant-based-milk/">Milk &amp; Plant-Based Milk</a></li>
+                                        <li id="menu-item-1825" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1825"><a href="https://klbtheme.com/bacola/product-category/beverages/tea-kombucha/">Tea &amp; Kombucha</a></li>
+                                        <li id="menu-item-1821" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1821"><a href="https://klbtheme.com/bacola/product-category/beverages/drink-boxes-pouches/">Drink Boxes &amp; Pouches</a></li>
+                                        <li id="menu-item-1820" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1820"><a href="https://klbtheme.com/bacola/product-category/beverages/craft-beer/">Craft Beer</a></li>
+                                        <li id="menu-item-1827" class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1827"><a href="https://klbtheme.com/bacola/product-category/beverages/wine/">Wine</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col col-12 col-lg-3 col-five">
+                            <div class="klbfooterwidget widget widget_nav_menu">
+                                <h4 class="widget-title">Breads &#038; Bakery</h4>
+                                <div class="menu-breakfast-dairy-container">
+                                    <ul id="menu-breakfast-dairy-1" class="menu">
+                                        <li class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1807"><a href="https://klbtheme.com/bacola/product-category/breakfast-dairy/milk-flavoured-milk/">Milk &amp; Flavoured Milk</a></li>
+                                        <li class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1802"><a href="https://klbtheme.com/bacola/product-category/breakfast-dairy/butter-and-margarine/">Butter and Margarine</a></li>
+                                        <li class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1803"><a href="https://klbtheme.com/bacola/product-category/breakfast-dairy/cheese/">Cheese</a></li>
+                                        <li class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1804"><a href="https://klbtheme.com/bacola/product-category/breakfast-dairy/eggs-substitutes/">Eggs Substitutes</a></li>
+                                        <li class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1805"><a href="https://klbtheme.com/bacola/product-category/breakfast-dairy/honey/">Honey</a></li>
+                                        <li class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1806"><a href="https://klbtheme.com/bacola/product-category/breakfast-dairy/marmalades/">Marmalades</a></li>
+                                        <li class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1808"><a href="https://klbtheme.com/bacola/product-category/breakfast-dairy/sour-cream-and-dips/">Sour Cream and Dips</a></li>
+                                        <li class="menu-item menu-item-type-taxonomy menu-item-object-product_cat menu-item-1809"><a href="https://klbtheme.com/bacola/product-category/breakfast-dairy/yogurt/">Yogurt</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-contacts">
+                <div class="container">
+                    <div class="column column-left">
+                        <div class="site-phone">
+                            <div class="phone-icon"><i class="klbth-icon-phone-call"></i></div>
+                            <div class="phone-detail">
+                                <h4 class="entry-title">8 800 555-55</h4>
+                                <span>Working 8:00 - 22:00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column column-right">
+                        <div class="site-mobile-app">
+                            <div class="app-content">
+                                <h6 class="entry-title">Download App on Mobile :</h6>
+                                <span>15% discount on your first purchase</span>
+                            </div>
+                            <div class="app-buttons">
+                                <a href="https://play.google.com/store" class="google-play">
+                                    <img src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/google-play.png" alt="app">
+                                </a>
+                                <a href="https://www.apple.com/app-store/" class="google-play">
+                                    <img src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/app-store.png" alt="app">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="site-social">
+                            <ul>
+                                <li><a href="https://www.facebook.com/" target="_blank"><i class="klbth-icon-facebook"></i></a></li>
+                                <li><a href="https://twitter.com/" target="_blank"><i class="klbth-icon-twitter"></i></a></li>
+                                <li><a href="https://www.instagram.com/" target="_blank"><i class="klbth-icon-instagram"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom border-enable">
+                <div class="container">
+                    <div class="site-copyright">
+                        <p>Copyright 2023 © Bacola WordPress Theme. All rights reserved. Powered by KlbTheme.</p>
+                    </div>
+                    <nav class="site-menu footer-menu">
+                        <ul id="menu-footer-menu" class="menu">
+                            <li id="menu-item-1889" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-privacy-policy menu-item-1889"><a rel="privacy-policy" href="https://klbtheme.com/bacola/privacy-policy/">Privacy Policy</a></li>
+                            <li id="menu-item-2066" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2066"><a href="https://klbtheme.com/bacola/terms-and-conditions/">Terms and Conditions</a></li>
+                            <li id="menu-item-1844" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1844"><a href="#">Cookie</a></li>
+                        </ul>
+                    </nav>
+                    <div class="site-payments"><a href="#"><img src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/payments.jpg" alt="payment"></a></div>
+                </div>
+            </div>
+        </footer>
+
+        <div class="site-overlay"></div>
+
+        <script>            (function () {
+                function maybePrefixUrlField() {
+                    const value = this.value.trim()
+                    if (value !== '' && value.indexOf('http') !== 0) {
+                        this.value = 'http://' + value
+                    }
+                }
+
+                const urlFields = document.querySelectorAll('.mc4wp-form input[type="url"]')
+                for (let j = 0; j < urlFields.length; j++) {
+                    urlFields[j].addEventListener('blur', maybePrefixUrlField)
+                }
+            })();
+        </script>
+        <a href="#" class="scrollToTop" aria-label="Scroll to top button"></a>
+        <div class="select-location">
+            <div class="select-location-wrapper">
+                <h6 class="entry-title">Choose your Delivery Location</h6>
+                <div class="entry-description">Enter your address and we will specify the offer for your area.</div>
+                <div class="close-popup"><i class="klbth-icon-x"></i></div>
+                <!-- close-popup -->
+                <div class="search-location">
+                    <select size="8" name="site-area" class="site-area" id="site-area" data-placeholder="Search your area">
+                        <option value="all" data-min="Clear All">Select a Location</option>
+                        <option value="alabama" data-min="Min: $130">Alabama</option>
+                        <option value="alaska" data-min="Min: $120">Alaska</option>
+                        <option value="arizona" data-min="Min: $150">Arizona</option>
+                        <option value="california" data-min="Min: $110">California</option>
+                        <option value="colorado" data-min="Min: $140">Colorado</option>
+                        <option value="florida" data-min="Min: $160">Florida</option>
+                        <option value="georgia" data-min="Min: $120">Georgia</option>
+                        <option value="kansas" data-min="Min: $170">Kansas</option>
+                        <option value="minnesota" data-min="Min: $120">Minnesota</option>
+                        <option value="new-york" data-min="Min: $110">New York</option>
+                        <option value="washington" data-min="Min: $130">Washington</option>
+                    </select>
+                </div>
+                <!-- search-location -->
+            </div>
+            <!-- select-location-wrapper -->
+            <div class="location-overlay"></div>
+        </div>
+        <!-- select-location -->
+        <div class="woosc-popup woosc-search">
+            <div class="woosc-popup-inner">
+                <div class="woosc-popup-content">
+                    <div class="woosc-popup-content-inner">
+                        <div class="woosc-popup-close"></div>
+                        <div class="woosc-search-input">
+                            <input type="search" id="woosc_search_input" placeholder="Type any keyword to search..." />
+                        </div>
+                        <div class="woosc-search-result"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="woosc-popup woosc-settings">
+            <div class="woosc-popup-inner">
+                <div class="woosc-popup-content">
+                    <div class="woosc-popup-content-inner">
+                        <div class="woosc-popup-close"></div>
+                        <ul class="woosc-settings-tools">
+                            <li>
+                                <label><input type="checkbox" class="woosc-settings-tool" value="hide_similarities" id="woosc_hide_similarities" /> Hide similarities                                                </label>
+                            </li>
+                            <li>
+                                <label><input type="checkbox" class="woosc-settings-tool" value="highlight_differences" id="woosc_highlight_differences" /> Highlight differences                                                </label>
+                            </li>
+                        </ul>
+                        Select the fields to be shown. Others will be hidden. Drag and drop to rearrange the order.
+                        <ul class="woosc-settings-fields">
+                            <li class="woosc-settings-field-li"><input type="checkbox" class="woosc-settings-field" value="6aal" checked /><span class="move">Image</span></li>
+                            <li class="woosc-settings-field-li"><input type="checkbox" class="woosc-settings-field" value="ssmj" checked /><span class="move">SKU</span></li>
+                            <li class="woosc-settings-field-li"><input type="checkbox" class="woosc-settings-field" value="qwoyfg" checked /><span class="move">Rating</span></li>
+                            <li class="woosc-settings-field-li"><input type="checkbox" class="woosc-settings-field" value="1aj2" checked /><span class="move">Price</span></li>
+                            <li class="woosc-settings-field-li"><input type="checkbox" class="woosc-settings-field" value="9nrc" checked /><span class="move">Stock</span></li>
+                            <li class="woosc-settings-field-li"><input type="checkbox" class="woosc-settings-field" value="xic7" checked /><span class="move">Availability</span></li>
+                            <li class="woosc-settings-field-li"><input type="checkbox" class="woosc-settings-field" value="0yq4" checked /><span class="move">Add to cart</span></li>
+                            <li class="woosc-settings-field-li"><input type="checkbox" class="woosc-settings-field" value="2jx7" checked /><span class="move">Description</span></li>
+                            <li class="woosc-settings-field-li"><input type="checkbox" class="woosc-settings-field" value="vvey" checked /><span class="move">Content</span></li>
+                            <li class="woosc-settings-field-li"><input type="checkbox" class="woosc-settings-field" value="le1b" checked /><span class="move">Weight</span></li>
+                            <li class="woosc-settings-field-li"><input type="checkbox" class="woosc-settings-field" value="1e9l" checked /><span class="move">Dimensions</span></li>
+                            <li class="woosc-settings-field-li"><input type="checkbox" class="woosc-settings-field" value="hb5y" checked /><span class="move">Additional information</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="woosc-popup woosc-share">
+            <div class="woosc-popup-inner">
+                <div class="woosc-popup-content">
+                    <div class="woosc-popup-content-inner">
+                        <div class="woosc-popup-close"></div>
+                        <div class="woosc-share-content"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="woosc-area" class="woosc-area woosc-bar-bottom woosc-bar-right woosc-bar-click-outside-yes woosc-hide-checkout" data-bg-color="#292a30" data-btn-color="#00a0d2">
+            <div class="woosc-inner">
+                <div class="woosc-table">
+                    <div class="woosc-table-inner">
+                        <a href="#close" id="woosc-table-close" class="woosc-table-close hint--left" aria-label="Close"><span class="woosc-table-close-icon"></span></a>
+                        <div class="woosc-table-items"></div>
+                    </div>
+                </div>
+                <div class="woosc-bar">
+                    <div class="woosc-bar-notice">
+                        Click outside to hide the comparison bar
+                    </div>
+                    <a href="#print" class="woosc-bar-print hint--top" aria-label="Print"></a>
+                    <a href="#share" class="woosc-bar-share hint--top" aria-label="Share"></a>
+                    <a href="#search" class="woosc-bar-search hint--top" aria-label="Add product"></a>
+                    <div class="woosc-bar-items"></div>
+                    <div class="woosc-bar-btn woosc-bar-btn-text">
+                        <div class="woosc-bar-btn-icon-wrapper">
+                            <div class="woosc-bar-btn-icon-inner">
+                                <span></span><span></span><span></span>
+                            </div>
+                        </div>
+                        Compare
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script id="tmpl-rwmb-media-item" type="text/html">
+        <input type="hidden" name="{{{ data.controller.fieldName }}}" value="{{{ data.id }}}" class="rwmb-media-input">
+        <div class="rwmb-file-icon">
+            <# if ( data.sizes ) { #>
+                <# if ( data.sizes.thumbnail ) { #>
+                    <img src="{{{ data.sizes.thumbnail.url }}}">
+                <# } else { #>
+                    <img src="{{{ data.sizes.full.url }}}">
+                <# } #>
+            <# } else { #>
+                <# if ( data.image && data.image.src && data.image.src !== data.icon ) { #>
+                    <img src="{{ data.image.src }}" />
+                <# } else { #>
+                    <img src="{{ data.icon }}" />
+                <# } #>
+            <# } #>
+        </div>
+        <div class="rwmb-file-info">
+            <a href="{{{ data.url }}}" class="rwmb-file-title" target="_blank">
+                <# if( data.title ) { #>
+                    {{{ data.title }}}
+                <# } else { #>
+                    {{{ i18nRwmbMedia.noTitle }}}
+                <# } #>
+            </a>
+            <div class="rwmb-file-name">{{{ data.filename }}}</div>
+            <div class="rwmb-file-actions">
+                <a class="rwmb-edit-media" title="{{{ i18nRwmbMedia.edit }}}" href="{{{ data.editLink }}}" target="_blank">
+                    {{{ i18nRwmbMedia.edit }}}
+                </a>
+                <a href="#" class="rwmb-remove-media" title="{{{ i18nRwmbMedia.remove }}}">
+                    {{{ i18nRwmbMedia.remove }}}
+                </a>
+            </div>
+        </div>
+    </script>
+
+    <script id="tmpl-rwmb-media-status" type="text/html">
+        <# if ( data.maxFiles > 0 ) { #>
+            {{{ data.length }}}/{{{ data.maxFiles }}}
+            <# if ( 1 < data.maxFiles ) { #>{{{ i18nRwmbMedia.multiple }}}<# } else {#>{{{ i18nRwmbMedia.single }}}<# } #>
+        <# } #>
+    </script>
+
+    <script id="tmpl-rwmb-media-button" type="text/html">
+        <a class="button">{{{ data.text }}}</a>
+    </script>
+
+    <script id="tmpl-rwmb-image-item" type="text/html">
+        <input type="hidden" name="{{{ data.controller.fieldName }}}" value="{{{ data.id }}}" class="rwmb-media-input">
+        <div class="rwmb-file-icon">
+            <# if ( 'image' === data.type && data.sizes ) { #>
+                <# if ( data.sizes[data.controller.imageSize] ) { #>
+                    <img src="{{{ data.sizes[data.controller.imageSize].url }}}">
+                <# } else { #>
+                    <img src="{{{ data.sizes.full.url }}}">
+                <# } #>
+            <# } else { #>
+                <# if ( data.image && data.image.src && data.image.src !== data.icon ) { #>
+                    <img src="{{ data.image.src }}" />
+                <# } else { #>
+                    <img src="{{ data.icon }}" />
+                <# } #>
+            <# } #>
+        </div>
+        <div class="rwmb-image-overlay"></div>
+        <div class="rwmb-image-actions">
+            <a class="rwmb-image-edit rwmb-edit-media" title="{{{ i18nRwmbMedia.edit }}}" href="{{{ data.editLink }}}" target="_blank">
+                <span class="dashicons dashicons-edit"></span>
+            </a>
+            <a href="#" class="rwmb-image-delete rwmb-remove-media" title="{{{ i18nRwmbMedia.remove }}}">
+                <span class="dashicons dashicons-no-alt"></span>
+            </a>
+        </div>
+    </script>
+    <script type="text/javascript">
+        (function () {
+            var c = document.body.className;
+            c = c.replace(/woocommerce-no-js/, 'woocommerce-js');
+            document.body.className = c;
+        })();
+    </script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/plugins/contact-form-7/includes/swv/js/index.js?ver=5.8' id='swv-js'></script>
+    <script type='text/javascript' id='contact-form-7-js-extra'>
+        /* <![CDATA[ */
+        var wpcf7 = { "api": { "root": "https:\/\/klbtheme.com\/bacola\/wp-json\/", "namespace": "contact-form-7\/v1" }, "cached": "1" };
+        /* ]]> */
+    </script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/plugins/contact-form-7/includes/js/index.js?ver=5.8' id='contact-form-7-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/assets/js/jquery-blockui/jquery.blockUI.min.js?ver=2.7.0-wc.8.0.3' id='jquery-blockui-js'></script>
+    <script type='text/javascript' id='wc-add-to-cart-js-extra'>
+        /* <![CDATA[ */
+        var wc_add_to_cart_params = { "ajax_url": "\/bacola\/wp-admin\/admin-ajax.php", "wc_ajax_url": "\/bacola\/?wc-ajax=%%endpoint%%", "i18n_view_cart": "View cart", "cart_url": "https:\/\/klbtheme.com\/bacola\/cart\/", "is_cart": "", "cart_redirect_after_add": "no" };
+        /* ]]> */
+    </script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/assets/js/frontend/add-to-cart.min.js?ver=8.0.3' id='wc-add-to-cart-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/assets/js/js-cookie/js.cookie.min.js?ver=2.1.4-wc.8.0.3' id='js-cookie-js'></script>
+    <script type='text/javascript' id='woocommerce-js-extra'>
+        /* <![CDATA[ */
+        var woocommerce_params = { "ajax_url": "\/bacola\/wp-admin\/admin-ajax.php", "wc_ajax_url": "\/bacola\/?wc-ajax=%%endpoint%%" };
+        /* ]]> */
+    </script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/assets/js/frontend/woocommerce.min.js?ver=8.0.3' id='woocommerce-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-includes/js/underscore.min.js?ver=1.13.4' id='underscore-js'></script>
+    <script type='text/javascript' id='wp-util-js-extra'>
+        /* <![CDATA[ */
+        var _wpUtilSettings = { "ajax": { "url": "\/bacola\/wp-admin\/admin-ajax.php" } };
+        /* ]]> */
+    </script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-includes/js/wp-util.min.js?ver=6.3.1' id='wp-util-js'></script>
+    <script type='text/javascript' id='wc-add-to-cart-variation-js-extra'>
+        /* <![CDATA[ */
+        var wc_add_to_cart_variation_params = { "wc_ajax_url": "\/bacola\/?wc-ajax=%%endpoint%%", "i18n_no_matching_variations_text": "Sorry, no products matched your selection. Please choose a different combination.", "i18n_make_a_selection_text": "Please select some product options before adding this product to your cart.", "i18n_unavailable_text": "Sorry, this product is unavailable. Please choose a different combination." };
+        /* ]]> */
+    </script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/assets/js/frontend/add-to-cart-variation.min.js?ver=8.0.3' id='wc-add-to-cart-variation-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/plugins/bacola-core/woocommerce-filter/swatches/js/swatches.js?ver=1.0' id='klbtheme-swatches-js'></script>
+    <script id="rocket-browser-checker-js-after" type="text/javascript">
+        "use strict"; var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || !1, descriptor.configurable = !0, "value" in descriptor && (descriptor.writable = !0), Object.defineProperty(target, descriptor.key, descriptor) } } return function (Constructor, protoProps, staticProps) { return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), Constructor } }(); function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function") } var RocketBrowserCompatibilityChecker = function () { function RocketBrowserCompatibilityChecker(options) { _classCallCheck(this, RocketBrowserCompatibilityChecker), this.passiveSupported = !1, this._checkPassiveOption(this), this.options = !!this.passiveSupported && options } return _createClass(RocketBrowserCompatibilityChecker, [{ key: "_checkPassiveOption", value: function (self) { try { var options = { get passive() { return !(self.passiveSupported = !0) } }; window.addEventListener("test", null, options), window.removeEventListener("test", null, options) } catch (err) { self.passiveSupported = !1 } } }, { key: "initRequestIdleCallback", value: function () { !1 in window && (window.requestIdleCallback = function (cb) { var start = Date.now(); return setTimeout(function () { cb({ didTimeout: !1, timeRemaining: function () { return Math.max(0, 50 - (Date.now() - start)) } }) }, 1) }), !1 in window && (window.cancelIdleCallback = function (id) { return clearTimeout(id) }) } }, { key: "isDataSaverModeOn", value: function () { return "connection" in navigator && !0 === navigator.connection.saveData } }, { key: "supportsLinkPrefetch", value: function () { var elem = document.createElement("link"); return elem.relList && elem.relList.supports && elem.relList.supports("prefetch") && window.IntersectionObserver && "isIntersecting" in IntersectionObserverEntry.prototype } }, { key: "isSlowConnection", value: function () { return "connection" in navigator && "effectiveType" in navigator.connection && ("2g" === navigator.connection.effectiveType || "slow-2g" === navigator.connection.effectiveType) } }]), RocketBrowserCompatibilityChecker }();
+    </script>
+    <script type='text/javascript' id='rocket-preload-links-js-extra'>
+        /* <![CDATA[ */
+        var RocketPreloadLinksConfig = { "excludeUris": "\/bacola(\/wishlist\/|\/dashboard\/|\/(?:.+\/)?feed(?:\/(?:.+\/?)?)?$|\/(?:.+\/)?embed\/|\/checkout\/??(.*)|\/cart\/?|\/my-account\/??(.*)|\/wc-api\/v(.*)|http:\/\/(\/%5B\/%5D+)?\/(index.php\/)?(.*)wp-json(\/.*|$))|\/refer\/|\/go\/|\/recommend\/|\/recommends\/", "usesTrailingSlash": "1", "imageExt": "jpg|jpeg|gif|png|tiff|bmp|webp|avif|pdf|doc|docx|xls|xlsx|php", "fileExt": "jpg|jpeg|gif|png|tiff|bmp|webp|avif|pdf|doc|docx|xls|xlsx|php|html|htm", "siteUrl": "https:\/\/klbtheme.com\/bacola", "onHoverDelay": "100", "rateThrottle": "3" };
+        /* ]]> */
+    </script>
+    <script id="rocket-preload-links-js-after" type="text/javascript">
+        (function () {
+            "use strict"; var r = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (e) { return typeof e } : function (e) { return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e }, e = function () { function i(e, t) { for (var n = 0; n < t.length; n++) { var i = t[n]; i.enumerable = i.enumerable || !1, i.configurable = !0, "value" in i && (i.writable = !0), Object.defineProperty(e, i.key, i) } } return function (e, t, n) { return t && i(e.prototype, t), n && i(e, n), e } }(); function i(e, t) { if (!(e instanceof t)) throw new TypeError("Cannot call a class as a function") } var t = function () { function n(e, t) { i(this, n), this.browser = e, this.config = t, this.options = this.browser.options, this.prefetched = new Set, this.eventTime = null, this.threshold = 1111, this.numOnHover = 0 } return e(n, [{ key: "init", value: function () { !this.browser.supportsLinkPrefetch() || this.browser.isDataSaverModeOn() || this.browser.isSlowConnection() || (this.regex = { excludeUris: RegExp(this.config.excludeUris, "i"), images: RegExp(".(" + this.config.imageExt + ")$", "i"), fileExt: RegExp(".(" + this.config.fileExt + ")$", "i") }, this._initListeners(this)) } }, { key: "_initListeners", value: function (e) { -1 < this.config.onHoverDelay && document.addEventListener("mouseover", e.listener.bind(e), e.listenerOptions), document.addEventListener("mousedown", e.listener.bind(e), e.listenerOptions), document.addEventListener("touchstart", e.listener.bind(e), e.listenerOptions) } }, { key: "listener", value: function (e) { var t = e.target.closest("a"), n = this._prepareUrl(t); if (null !== n) switch (e.type) { case "mousedown": case "touchstart": this._addPrefetchLink(n); break; case "mouseover": this._earlyPrefetch(t, n, "mouseout") } } }, { key: "_earlyPrefetch", value: function (t, e, n) { var i = this, r = setTimeout(function () { if (r = null, 0 === i.numOnHover) setTimeout(function () { return i.numOnHover = 0 }, 1e3); else if (i.numOnHover > i.config.rateThrottle) return; i.numOnHover++, i._addPrefetchLink(e) }, this.config.onHoverDelay); t.addEventListener(n, function e() { t.removeEventListener(n, e, { passive: !0 }), null !== r && (clearTimeout(r), r = null) }, { passive: !0 }) } }, { key: "_addPrefetchLink", value: function (i) { return this.prefetched.add(i.href), new Promise(function (e, t) { var n = document.createElement("link"); n.rel = "prefetch", n.href = i.href, n.onload = e, n.onerror = t, document.head.appendChild(n) }).catch(function () { }) } }, { key: "_prepareUrl", value: function (e) { if (null === e || "object" !== (void 0 === e ? "undefined" : r(e)) || !1 in e || -1 === ["http:", "https:"].indexOf(e.protocol)) return null; var t = e.href.substring(0, this.config.siteUrl.length), n = this._getPathname(e.href, t), i = { original: e.href, protocol: e.protocol, origin: t, pathname: n, href: t + n }; return this._isLinkOk(i) ? i : null } }, { key: "_getPathname", value: function (e, t) { var n = t ? e.substring(this.config.siteUrl.length) : e; return n.startsWith("/") || (n = "/" + n), this._shouldAddTrailingSlash(n) ? n + "/" : n } }, { key: "_shouldAddTrailingSlash", value: function (e) { return this.config.usesTrailingSlash && !e.endsWith("/") && !this.regex.fileExt.test(e) } }, { key: "_isLinkOk", value: function (e) { return null !== e && "object" === (void 0 === e ? "undefined" : r(e)) && (!this.prefetched.has(e.href) && e.origin === this.config.siteUrl && -1 === e.href.indexOf("?") && -1 === e.href.indexOf("#") && !this.regex.excludeUris.test(e.href) && !this.regex.images.test(e.href)) } }], [{ key: "run", value: function () { "undefined" != typeof RocketPreloadLinksConfig && new n(new RocketBrowserCompatibilityChecker({ capture: !0, passive: !0 }), RocketPreloadLinksConfig).init() } }]), n }(); t.run();
+        }());
+    </script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/plugins/woo-smart-compare/assets/libs/print/jQuery.print.js?ver=6.1.3' id='print-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/plugins/woo-smart-compare/assets/libs/table-head-fixer/table-head-fixer.js?ver=6.1.3' id='table-head-fixer-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/plugins/woo-smart-compare/assets/libs/perfect-scrollbar/js/perfect-scrollbar.jquery.min.js?ver=6.1.3' id='perfect-scrollbar-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-includes/js/jquery/ui/core.min.js?ver=1.13.2' id='jquery-ui-core-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-includes/js/jquery/ui/mouse.min.js?ver=1.13.2' id='jquery-ui-mouse-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-includes/js/jquery/ui/sortable.min.js?ver=1.13.2' id='jquery-ui-sortable-js'></script>
+    <script type='text/javascript' id='woosc-frontend-js-extra'>
+        /* <![CDATA[ */
+        var woosc_vars = { "ajax_url": "https:\/\/klbtheme.com\/bacola\/wp-admin\/admin-ajax.php", "nonce": "edac63ad66", "hash": "6", "user_id": "0cdb64fab32a05bd393b20c8c351de9f", "page_url": "#", "open_button": "", "open_button_action": "open_popup", "menu_action": "open_popup", "button_action": "show_table", "sidebar_position": "right", "message_position": "right-top", "message_added": "{name} has been added to Compare list.", "message_removed": "{name} has been removed from the Compare list.", "message_exists": "{name} is already in the Compare list.", "open_bar": "no", "bar_bubble": "no", "adding": "prepend", "click_again": "no", "hide_empty": "no", "click_outside": "yes", "freeze_column": "yes", "freeze_row": "yes", "scrollbar": "yes", "limit": "100", "remove_all": "Do you want to remove all products from the compare?", "limit_notice": "You can add a maximum of {limit} products to the comparison table.", "copied_text": "Share link %s was copied to clipboard!", "button_text": "Compare", "button_text_added": "Compare", "button_normal_icon": "woosc-icon-1", "button_added_icon": "woosc-icon-74" };
+        /* ]]> */
+    </script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/plugins/woo-smart-compare/assets/js/frontend.js?ver=6.1.3' id='woosc-frontend-js'></script>
+    <script type='text/javascript' id='wc-cart-fragments-js-extra'>
+        /* <![CDATA[ */
+        var wc_cart_fragments_params = { "ajax_url": "\/bacola\/wp-admin\/admin-ajax.php", "wc_ajax_url": "\/bacola\/?wc-ajax=%%endpoint%%", "cart_hash_key": "wc_cart_hash_564040bf48d33b828959432b692ab93a", "fragment_name": "wc_fragments_564040bf48d33b828959432b692ab93a", "request_timeout": "5000" };
+        /* ]]> */
+    </script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/assets/js/frontend/cart-fragments.min.js?ver=8.0.3' id='wc-cart-fragments-js'></script>
+    <script type='text/javascript' id='tinvwl-js-extra'>
+        /* <![CDATA[ */
+        var tinvwl_add_to_wishlist = { "text_create": "Create New", "text_already_in": "{product_name} already in Wishlist", "simple_flow": "", "hide_zero_counter": "", "i18n_make_a_selection_text": "Please select some product options before adding this product to your wishlist.", "tinvwl_break_submit": "No items or actions are selected.", "tinvwl_clipboard": "Copied!", "allow_parent_variable": "", "block_ajax_wishlists_data": "", "update_wishlists_data": "", "hash_key": "ti_wishlist_data_564040bf48d33b828959432b692ab93a", "nonce": "a40f28a2d9", "rest_root": "https:\/\/klbtheme.com\/bacola\/wp-json\/", "plugin_url": "https:\/\/klbtheme.com\/bacola\/wp-content\/plugins\/ti-woocommerce-wishlist\/", "wc_ajax_url": "\/bacola\/?wc-ajax=tinvwl", "stats": "", "popup_timer": "6000" };
+        /* ]]> */
+    </script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/plugins/ti-woocommerce-wishlist/assets/js/public.min.js?ver=2.7.4' id='tinvwl-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-includes/js/comment-reply.min.js?ver=6.3.1' id='comment-reply-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-includes/js/imagesloaded.min.js?ver=4.1.4' id='imagesloaded-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/themes/bacola/assets/js/bootstrap.bundle.min.js?ver=1.0' id='bootstrap-bundle-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/themes/bacola/assets/js/select2.full.min.js?ver=1.0' id='select2-full-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/themes/bacola/assets/js/vendor/gsap.min.js?ver=1.0' id='gsap-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/themes/bacola/assets/js/vendor/jquery.magnific-popup.min.js?ver=1.0' id='jquery-magnific-popup-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/themes/bacola/assets/js/vendor/perfect-scrollbar.min.js?ver=1.0' id='perfect-scrolllbar-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/themes/bacola/assets/js/vendor/slick.min.js?ver=1.0' id='slick-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/themes/bacola/assets/js/custom/sidebarfilter.js?ver=1.0' id='bacola-sidebarfilter-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/themes/bacola/assets/js/custom/productSorting.js?ver=1.0' id='bacola-productsorting-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/themes/bacola/assets/js/custom/productHover.js?ver=1.0' id='bacola-producthover-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/themes/bacola/assets/js/custom/cartquantity.js?ver=1.0' id='bacola-cartquantity-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/themes/bacola/assets/js/custom/sitescroll.js?ver=1.0' id='bacola-sitescroll-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/themes/bacola/assets/js/bundle.js?ver=1.0' id='bacola-bundle-js'></script>
+    <script type='text/javascript' id='bacola-quick-ajax-js-extra'>
+        /* <![CDATA[ */
+        var MyAjax = { "ajaxurl": "https:\/\/klbtheme.com\/bacola\/wp-admin\/admin-ajax.php" };
+        /* ]]> */
+    </script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/themes/bacola/assets/js/custom/quick_ajax.js?ver=1.0.0' id='bacola-quick-ajax-js'></script>
+    <script type='text/javascript' id='bacola-quantity_button-js-extra'>
+        /* <![CDATA[ */
+        var quantity = { "notice": "1" };
+        /* ]]> */
+    </script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/themes/bacola/assets/js/custom/quantity_button.js?ver=1.0.0' id='bacola-quantity_button-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/themes/bacola/assets/js/custom/variationform.js?ver=1.0.0' id='clotya-variationform-js'></script>
+    <script type='text/javascript' defer src='https://klbtheme.com/bacola/wp-content/plugins/mailchimp-for-wp/assets/js/forms.js?ver=4.9.7' id='mc4wp-forms-api-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/plugins/woocommerce/assets/js/jquery-cookie/jquery.cookie.min.js?ver=1.4.1-wc.8.0.3' id='jquery-cookie-js'></script>
+    <script type='text/javascript' id='klb-location-filter-js-extra'>
+        /* <![CDATA[ */
+        var locationfilter = { "popup": "" };
+        /* ]]> */
+    </script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/plugins/bacola-core/taxonomy/js/location-filter.js?ver=6.3.1' id='klb-location-filter-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/plugins/elementor/assets/js/webpack.runtime.min.js?ver=3.15.3' id='elementor-webpack-runtime-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/plugins/elementor/assets/js/frontend-modules.min.js?ver=3.15.3' id='elementor-frontend-modules-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/plugins/elementor/assets/lib/waypoints/waypoints.min.js?ver=4.0.2' id='elementor-waypoints-js'></script>
+    <script id="elementor-frontend-js-before" type="text/javascript">
+        var elementorFrontendConfig = { "environmentMode": { "edit": false, "wpPreview": false, "isScriptDebug": false }, "i18n": { "shareOnFacebook": "Share on Facebook", "shareOnTwitter": "Share on Twitter", "pinIt": "Pin it", "download": "Download", "downloadImage": "Download image", "fullscreen": "Fullscreen", "zoom": "Zoom", "share": "Share", "playVideo": "Play Video", "previous": "Previous", "next": "Next", "close": "Close", "a11yCarouselWrapperAriaLabel": "Carousel | Horizontal scrolling: Arrow Left & Right", "a11yCarouselPrevSlideMessage": "Previous slide", "a11yCarouselNextSlideMessage": "Next slide", "a11yCarouselFirstSlideMessage": "This is the first slide", "a11yCarouselLastSlideMessage": "This is the last slide", "a11yCarouselPaginationBulletMessage": "Go to slide" }, "is_rtl": false, "breakpoints": { "xs": 0, "sm": 480, "md": 768, "lg": 1025, "xl": 1440, "xxl": 1600 }, "responsive": { "breakpoints": { "mobile": { "label": "Mobile Portrait", "value": 767, "default_value": 767, "direction": "max", "is_enabled": true }, "mobile_extra": { "label": "Mobile Landscape", "value": 880, "default_value": 880, "direction": "max", "is_enabled": false }, "tablet": { "label": "Tablet Portrait", "value": 1024, "default_value": 1024, "direction": "max", "is_enabled": true }, "tablet_extra": { "label": "Tablet Landscape", "value": 1200, "default_value": 1200, "direction": "max", "is_enabled": false }, "laptop": { "label": "Laptop", "value": 1366, "default_value": 1366, "direction": "max", "is_enabled": false }, "widescreen": { "label": "Widescreen", "value": 2400, "default_value": 2400, "direction": "min", "is_enabled": false } } }, "version": "3.15.3", "is_static": false, "experimentalFeatures": { "e_dom_optimization": true, "e_optimized_assets_loading": true, "additional_custom_breakpoints": true, "landing-pages": true }, "urls": { "assets": "https:\/\/klbtheme.com\/bacola\/wp-content\/plugins\/elementor\/assets\/" }, "swiperClass": "swiper-container", "settings": { "page": [], "editorPreferences": [] }, "kit": { "active_breakpoints": ["viewport_mobile", "viewport_tablet"], "global_image_lightbox": "yes", "lightbox_enable_counter": "yes", "lightbox_enable_fullscreen": "yes", "lightbox_enable_zoom": "yes", "lightbox_enable_share": "yes", "lightbox_title_src": "title", "lightbox_description_src": "description" }, "post": { "id": 50, "title": "Bacola%20%E2%80%93%20Grocery%20Market%20and%20Food%20Theme%20%E2%80%93%20KlbTheme", "excerpt": "", "featuredImage": false } };
+    </script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/plugins/elementor/assets/js/frontend.min.js?ver=3.15.3' id='elementor-frontend-js'></script>
+    <script type='text/javascript' src='https://klbtheme.com/bacola/wp-content/plugins/bacola-core/elementor/custom-scripts.js?ver=6.3.1' id='bacola-core-custom-scripts-js'></script>
+
+
+    @if (isPrerenderedOnly is false)
+    {
+        @if (isBlazorServer)
+        {
+            <script src="_framework/blazor.server.js" asp-append-version=true></script>
+        }
+        else
+        {
+            <script src="_framework/blazor.webassembly.js" autostart="false" asp-append-version=true></script>
+            @if (isPwa || isPwaPrerendered)
+            {
+                <script src="_content/Bit.Bswup/bit-bswup.js" log="none" asp-append-version=true></script>
+                <script src="_content/Bit.Bswup/bit-bswup.progress.js" asp-append-version=true></script>
+
+                @if (isPwaPrerendered)
+                {
+                    <component type="typeof(AppBswupProgressBar)" render-mode="@RenderMode.Static" />
+                }
+                else
+                {
+                    <link href="_content/Bit.Bswup/bit-bswup.progress.css" rel="stylesheet" asp-append-version=true>
+                    <component type="typeof(Bit.Bswup.BswupProgress)"
+                               param-AutoReload="true"
+                               param-HideApp="true"
+                               param-AppContainer="@("#app-container")"
+                               render-mode="@RenderMode.Static" />
+                }
+            }
+            else if (isSpa || isSpaPrerendered)
+            {
+                <script src="_content/Bit.Bup/bit-bup.js" asp-append-version=true></script>
+                <script src="_content/Bit.Bup/bit-bup.progress.js" asp-append-version=true></script>
+                @if (isSpaPrerendered)
+                {
+                    <component type="typeof(AppBupProgressBar)" render-mode="@RenderMode.WebAssemblyPrerendered" />
+                }
+                else
+                {
+                    <link rel="stylesheet" href="_content/Bit.Bup/bit-bup.progress.css" asp-append-version=true>
+                    <component type="typeof(Bit.Bup.BupProgress)" render-mode="@RenderMode.Static"
+                               param-AutoHide="true"
+                               param-HideApp="true"
+                               param-AppContainer="@("#app-container")" />
+                }
+            }
+        }
+        <script src="_content/Bit.BlazorUI/scripts/bit.blazorui.js" asp-append-version=true></script>
+    }
+    <script src="_content/BitTodo.Client.Core/scripts/app.js" asp-append-version=true></script>
+
+    @if ((isSpaPrerendered || isPwaPrerendered) && !noPrerender)
+    {
+        <persist-component-state />
+    }
+</body>
+</html>

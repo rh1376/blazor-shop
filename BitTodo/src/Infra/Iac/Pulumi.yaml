@@ -1,0 +1,3 @@
+﻿name: BitTodo.Iac
+runtime: dotnet
+description: BitTodo infrastructure as a code
