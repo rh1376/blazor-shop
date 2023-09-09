@@ -2,7 +2,7 @@
 <Project>
         <PropertyGroup>
 
-        <BlazorMode>BlazorWebAssembly</BlazorMode>
+        <BlazorMode>BlazorHybrid</BlazorMode>
         <!-- You can use either BlazorServer, BlazorWebAssembly, BlazorHybrid or BlazorElectron -->
         <!-- Learn more about blazor modes at https://bitplatform.dev/templates/hosting-models -->
 

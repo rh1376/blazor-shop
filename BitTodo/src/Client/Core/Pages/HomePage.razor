@@ -1,5 +1,9 @@
 ﻿@page "/"
 @inherits AppComponentBase
+@{
+    var carouselCategoryItemCount = OperatingSystem.IsAndroid() ? 3 : 5;
+    var carouselProductItemCount = OperatingSystem.IsAndroid() ? 2 : 5;
+}
 
 <PageTitle>خانه</PageTitle>
 
@@ -191,7 +195,7 @@
                                             <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
                                         </svg>
                                         <div class="site-slider slick-initialized slick-slider slick-dotted" data-slideshow="1" data-slidespeed="1200" data-autoplay="false" data-autospeed="" data-dots="true" data-arrows="false">
-                                            <BitCarousel AutoPlay="true" AutoPlayInterval="5000" ShowDots="false" InfiniteScrolling="true" Style="height: 500px;">
+                                            <BitCarousel AutoPlay="true" IsEnabled="false" AutoPlayInterval="5000" ShowDots="false" InfiniteScrolling="true" Style="@(OperatingSystem.IsAndroid() ? "height: 300px" : "height: 500px")">
                                                 <BitCarouselItem>
                                                     <div class="slider-item">
                                                         <div class="content-wrapper" style="left: 0px;">
@@ -330,12 +334,11 @@
                                                 <div class="product-badges"><span class="badge style-1 onsale">19%</span><span class="badge style-2" style="background-color: #e5f8ed;color: #038e42;">organic</span></div>
                                                 <a href="https://klbtheme.com/bacola/product/field-roast-chao-cheese-creamy-original/"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/product-image-46-346x310.jpg" alt="Field Roast Chao Cheese Creamy Original"></a>
                                                 <div class="product-buttons">
-                                                    <a href="376" class="detail-bnt quick-view-button" OnClick=@(() => IsOpen = true)>
+                                                    <BitButton Class="detail-bnt quick-view-button" Style="min-width: auto;padding: 0px;" OnClick="(() => IsOpen = true)">
                                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                             <path d="M128 32V0H16C7.163 0 0 7.163 0 16v112h32V54.56L180.64 203.2l22.56-22.56L54.56 32H128zM496 0H384v32h73.44L308.8 180.64l22.56 22.56L480 54.56V128h32V16c0-8.837-7.163-16-16-16zM480 457.44L331.36 308.8l-22.56 22.56L457.44 480H384v32h112c8.837 0 16-7.163 16-16V384h-32v73.44zM180.64 308.64L32 457.44V384H0v112c0 8.837 7.163 16 16 16h112v-32H54.56L203.2 331.36l-22.56-22.72z"></path>
                                                         </svg>
-                                                    </a>
-                                                   
+                                                    </BitButton>
                                                 </div>
                                                 <!-- product-buttons -->
                                             </div>
@@ -381,12 +384,11 @@
                                                 <div class="product-badges"><span class="badge style-1 onsale">19%</span><span class="badge style-1" style="background-color: #71778e;">Recommended</span></div>
                                                 <a href="https://klbtheme.com/bacola/product/chobani-complete-vanilla-greek-yogurt/"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/product-image-50-346x310.jpg" alt="Chobani Complete Vanilla Greek Yogurt"></a>
                                                 <div class="product-buttons">
-                                                    <a href="390" class="detail-bnt quick-view-button" OnClick=@(() => IsOpen = true)>
+                                                    <BitButton Class="detail-bnt quick-view-button" Style="min-width: auto;padding: 0px;" OnClick="(() => IsOpen = true)">
                                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                             <path d="M128 32V0H16C7.163 0 0 7.163 0 16v112h32V54.56L180.64 203.2l22.56-22.56L54.56 32H128zM496 0H384v32h73.44L308.8 180.64l22.56 22.56L480 54.56V128h32V16c0-8.837-7.163-16-16-16zM480 457.44L331.36 308.8l-22.56 22.56L457.44 480H384v32h112c8.837 0 16-7.163 16-16V384h-32v73.44zM180.64 308.64L32 457.44V384H0v112c0 8.837 7.163 16 16 16h112v-32H54.56L203.2 331.36l-22.56-22.72z"></path>
                                                         </svg>
-                                                    </a>
-                                                   
+                                                    </BitButton>
                                                 </div>
                                                 <!-- product-buttons -->
                                             </div>
@@ -433,12 +435,11 @@
                                                 <div class="product-badges"><span class="badge style-1 onsale">16%</span></div>
                                                 <a href="https://klbtheme.com/bacola/product/encore-seafoods-stuffed-alaskan-salmon/"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/product-image-48-346x310.jpg" alt="Encore Seafoods Stuffed Alaskan Salmon"></a>
                                                 <div class="product-buttons">
-                                                    <a href="383" class="detail-bnt quick-view-button" OnClick=@(() => IsOpen = true)>
+                                                    <BitButton Class="detail-bnt quick-view-button" Style="min-width: auto;padding: 0px;" OnClick="(() => IsOpen = true)">
                                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                             <path d="M128 32V0H16C7.163 0 0 7.163 0 16v112h32V54.56L180.64 203.2l22.56-22.56L54.56 32H128zM496 0H384v32h73.44L308.8 180.64l22.56 22.56L480 54.56V128h32V16c0-8.837-7.163-16-16-16zM480 457.44L331.36 308.8l-22.56 22.56L457.44 480H384v32h112c8.837 0 16-7.163 16-16V384h-32v73.44zM180.64 308.64L32 457.44V384H0v112c0 8.837 7.163 16 16 16h112v-32H54.56L203.2 331.36l-22.56-22.72z"></path>
                                                         </svg>
-                                                    </a>
-                                                   
+                                                    </BitButton>
                                                 </div>
                                                 <!-- product-buttons -->
                                             </div>
@@ -484,12 +485,11 @@
                                                 <div class="product-badges"><span class="badge  onsale">47%</span></div>
                                                 <a href="https://klbtheme.com/bacola/product/haagen-dazs-caramel-cone-ice-cream/"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/product-image-38-346x310.jpg" alt="Haagen-Dazs Caramel Cone Ice Cream"></a>
                                                 <div class="product-buttons">
-                                                    <a href="352" class="detail-bnt quick-view-button" OnClick=@(() => IsOpen = true)>
+                                                    <BitButton Class="detail-bnt quick-view-button" Style="min-width: auto;padding: 0px;" OnClick="(() => IsOpen = true)">
                                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                             <path d="M128 32V0H16C7.163 0 0 7.163 0 16v112h32V54.56L180.64 203.2l22.56-22.56L54.56 32H128zM496 0H384v32h73.44L308.8 180.64l22.56 22.56L480 54.56V128h32V16c0-8.837-7.163-16-16-16zM480 457.44L331.36 308.8l-22.56 22.56L457.44 480H384v32h112c8.837 0 16-7.163 16-16V384h-32v73.44zM180.64 308.64L32 457.44V384H0v112c0 8.837 7.163 16 16 16h112v-32H54.56L203.2 331.36l-22.56-22.72z"></path>
                                                         </svg>
-                                                    </a>
-                                                    
+                                                    </BitButton>
                                                 </div>
                                                 <!-- product-buttons -->
                                             </div>
@@ -535,12 +535,11 @@
                                                 <div class="product-badges"><span class="badge  onsale">15%</span></div>
                                                 <a href="https://klbtheme.com/bacola/product/nestle-original-coffee-mate-coffee-creamer/"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/product-image-32-346x310.jpg" alt="Nestle Original Coffee-Mate Coffee Creamer"></a>
                                                 <div class="product-buttons">
-                                                    <a href="325" class="detail-bnt quick-view-button" OnClick=@(() => IsOpen = true)>
+                                                    <BitButton Class="detail-bnt quick-view-button" Style="min-width: auto;padding: 0px;" OnClick="(() => IsOpen = true)">
                                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                             <path d="M128 32V0H16C7.163 0 0 7.163 0 16v112h32V54.56L180.64 203.2l22.56-22.56L54.56 32H128zM496 0H384v32h73.44L308.8 180.64l22.56 22.56L480 54.56V128h32V16c0-8.837-7.163-16-16-16zM480 457.44L331.36 308.8l-22.56 22.56L457.44 480H384v32h112c8.837 0 16-7.163 16-16V384h-32v73.44zM180.64 308.64L32 457.44V384H0v112c0 8.837 7.163 16 16 16h112v-32H54.56L203.2 331.36l-22.56-22.72z"></path>
                                                         </svg>
-                                                    </a>
-                                                    
+                                                    </BitButton>
                                                 </div>
                                                 <!-- product-buttons -->
                                             </div>
@@ -661,154 +660,154 @@
                                                             <div class="category-count">7 Items</div>
                                                         </div>
                                                     </div>
-                                                    <div class="category slick-slide slick-cloned" data-slick-index="-4" id="" aria-hidden="true" style="width: 234px;" tabindex="-1">
+                                                    <div class="category slick-slide slick-cloned" data-slick-index="-4" id="" aria-hidden="true"  tabindex="-1">
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/05/fruitvegetables-1.jpg" alt="Fruits &amp; Vegetables"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/" tabindex="-1">Fruits &amp; Vegetables</a></h3>
                                                             <div class="category-count">12 Items</div>
                                                         </div>
                                                     </div>
-                                                    <div class="category slick-slide slick-cloned" data-slick-index="-3" id="" aria-hidden="true" style="width: 234px;" tabindex="-1">
+                                                    <div class="category slick-slide slick-cloned" data-slick-index="-3" id="" aria-hidden="true"  tabindex="-1">
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/grocery-staples/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/category-image2.png" alt="Grocery &amp; Staples"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/grocery-staples/" tabindex="-1">Grocery &amp; Staples</a></h3>
                                                             <div class="category-count">7 Items</div>
                                                         </div>
                                                     </div>
-                                                    <div class="category slick-slide slick-cloned" data-slick-index="-2" id="" aria-hidden="true" style="width: 234px;" tabindex="-1">
+                                                    <div class="category slick-slide slick-cloned" data-slick-index="-2" id="" aria-hidden="true"  tabindex="-1">
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/household-needs/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/05/household-1.jpg" alt="Household Needs"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/household-needs/" tabindex="-1">Household Needs</a></h3>
                                                             <div class="category-count">1 Items</div>
                                                         </div>
                                                     </div>
-                                                    <div class="category slick-slide slick-cloned" data-slick-index="-1" id="" aria-hidden="true" style="width: 234px;" tabindex="-1">
+                                                    <div class="category slick-slide slick-cloned" data-slick-index="-1" id="" aria-hidden="true"  tabindex="-1">
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/meats-seafood/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/05/meat-1.jpg" alt="Meats &amp; Seafood"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/meats-seafood/" tabindex="-1">Meats &amp; Seafood</a></h3>
                                                             <div class="category-count">5 Items</div>
                                                         </div>
                                                     </div>
-                                                    <div class="category slick-slide" data-slick-index="0" aria-hidden="true" style="width: 234px;" tabindex="-1">
+                                                    <div class="category slick-slide" data-slick-index="0" aria-hidden="true"  tabindex="-1">
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/beverages/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/05/baverages-1.jpg" alt="Beverages"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/beverages/" tabindex="-1">Beverages</a></h3>
                                                             <div class="category-count">11 Items</div>
                                                         </div>
                                                     </div>
-                                                    <div class="category slick-slide" data-slick-index="1" aria-hidden="true" style="width: 234px;" tabindex="-1">
+                                                    <div class="category slick-slide" data-slick-index="1" aria-hidden="true"  tabindex="-1">
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/biscuits-snacks/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/05/biscuitssnacks-1.jpg" alt="Biscuits &amp; Snacks"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/biscuits-snacks/" tabindex="-1">Biscuits &amp; Snacks</a></h3>
                                                             <div class="category-count">6 Items</div>
                                                         </div>
                                                     </div>
-                                                    <div class="category slick-slide" data-slick-index="2" aria-hidden="true" style="width: 234px;" tabindex="-1">
+                                                    <div class="category slick-slide" data-slick-index="2" aria-hidden="true"  tabindex="-1">
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/breads-bakery/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/05/breadbakery-1.jpg" alt="Breads &amp; Bakery"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/breads-bakery/" tabindex="-1">Breads &amp; Bakery</a></h3>
                                                             <div class="category-count">6 Items</div>
                                                         </div>
                                                     </div>
-                                                    <div class="category slick-slide slick-current slick-active" data-slick-index="3" aria-hidden="false" style="width: 234px;" tabindex="0">
+                                                    <div class="category slick-slide slick-current slick-active" data-slick-index="3" aria-hidden="false"  tabindex="0">
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/breakfast-dairy/" tabindex="0"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/05/dairy-1.jpg" alt="Breakfast &amp; Dairy"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/breakfast-dairy/" tabindex="0">Breakfast &amp; Dairy</a></h3>
                                                             <div class="category-count">8 Items</div>
                                                         </div>
                                                     </div>
-                                                    <div class="category slick-slide slick-active" data-slick-index="4" aria-hidden="false" style="width: 234px;" tabindex="0">
+                                                    <div class="category slick-slide slick-active" data-slick-index="4" aria-hidden="false"  tabindex="0">
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/frozen-foods/" tabindex="0"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/category-image4.png" alt="Frozen Foods"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/frozen-foods/" tabindex="0">Frozen Foods</a></h3>
                                                             <div class="category-count">7 Items</div>
                                                         </div>
                                                     </div>
-                                                    <div class="category slick-slide slick-active" data-slick-index="5" aria-hidden="false" style="width: 234px;" tabindex="0">
+                                                    <div class="category slick-slide slick-active" data-slick-index="5" aria-hidden="false"  tabindex="0">
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/" tabindex="0"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/05/fruitvegetables-1.jpg" alt="Fruits &amp; Vegetables"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/" tabindex="0">Fruits &amp; Vegetables</a></h3>
                                                             <div class="category-count">12 Items</div>
                                                         </div>
                                                     </div>
-                                                    <div class="category slick-slide slick-active" data-slick-index="6" aria-hidden="false" style="width: 234px;" tabindex="0">
+                                                    <div class="category slick-slide slick-active" data-slick-index="6" aria-hidden="false"  tabindex="0">
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/grocery-staples/" tabindex="0"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/category-image2.png" alt="Grocery &amp; Staples"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/grocery-staples/" tabindex="0">Grocery &amp; Staples</a></h3>
                                                             <div class="category-count">7 Items</div>
                                                         </div>
                                                     </div>
-                                                    <div class="category slick-slide slick-active" data-slick-index="7" aria-hidden="false" style="width: 234px;" tabindex="0">
+                                                    <div class="category slick-slide slick-active" data-slick-index="7" aria-hidden="false"  tabindex="0">
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/household-needs/" tabindex="0"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/05/household-1.jpg" alt="Household Needs"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/household-needs/" tabindex="0">Household Needs</a></h3>
                                                             <div class="category-count">1 Items</div>
                                                         </div>
                                                     </div>
-                                                    <div class="category slick-slide" data-slick-index="8" aria-hidden="true" style="width: 234px;" tabindex="-1">
+                                                    <div class="category slick-slide" data-slick-index="8" aria-hidden="true"  tabindex="-1">
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/meats-seafood/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/05/meat-1.jpg" alt="Meats &amp; Seafood"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/meats-seafood/" tabindex="-1">Meats &amp; Seafood</a></h3>
                                                             <div class="category-count">5 Items</div>
                                                         </div>
                                                     </div>
-                                                    <div class="category slick-slide slick-cloned" data-slick-index="9" id="" aria-hidden="true" style="width: 234px;" tabindex="-1">
+                                                    <div class="category slick-slide slick-cloned" data-slick-index="9" id="" aria-hidden="true"  tabindex="-1">
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/beverages/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/05/baverages-1.jpg" alt="Beverages"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/beverages/" tabindex="-1">Beverages</a></h3>
                                                             <div class="category-count">11 Items</div>
                                                         </div>
                                                     </div>
-                                                    <div class="category slick-slide slick-cloned" data-slick-index="10" id="" aria-hidden="true" style="width: 234px;" tabindex="-1">
+                                                    <div class="category slick-slide slick-cloned" data-slick-index="10" id="" aria-hidden="true"  tabindex="-1">
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/biscuits-snacks/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/05/biscuitssnacks-1.jpg" alt="Biscuits &amp; Snacks"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/biscuits-snacks/" tabindex="-1">Biscuits &amp; Snacks</a></h3>
                                                             <div class="category-count">6 Items</div>
                                                         </div>
                                                     </div>
-                                                    <div class="category slick-slide slick-cloned" data-slick-index="11" id="" aria-hidden="true" style="width: 234px;" tabindex="-1">
+                                                    <div class="category slick-slide slick-cloned" data-slick-index="11" id="" aria-hidden="true"  tabindex="-1">
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/breads-bakery/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/05/breadbakery-1.jpg" alt="Breads &amp; Bakery"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/breads-bakery/" tabindex="-1">Breads &amp; Bakery</a></h3>
                                                             <div class="category-count">6 Items</div>
                                                         </div>
                                                     </div>
-                                                    <div class="category slick-slide slick-cloned" data-slick-index="12" id="" aria-hidden="true" style="width: 234px;" tabindex="-1">
+                                                    <div class="category slick-slide slick-cloned" data-slick-index="12" id="" aria-hidden="true"  tabindex="-1">
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/breakfast-dairy/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/05/dairy-1.jpg" alt="Breakfast &amp; Dairy"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/breakfast-dairy/" tabindex="-1">Breakfast &amp; Dairy</a></h3>
                                                             <div class="category-count">8 Items</div>
                                                         </div>
                                                     </div>
-                                                    <div class="category slick-slide slick-cloned" data-slick-index="13" id="" aria-hidden="true" style="width: 234px;" tabindex="-1">
+                                                    <div class="category slick-slide slick-cloned" data-slick-index="13" id="" aria-hidden="true"  tabindex="-1">
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/frozen-foods/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/category-image4.png" alt="Frozen Foods"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/frozen-foods/" tabindex="-1">Frozen Foods</a></h3>
                                                             <div class="category-count">7 Items</div>
                                                         </div>
                                                     </div>
-                                                    <div class="category slick-slide slick-cloned" data-slick-index="14" id="" aria-hidden="true" style="width: 234px;" tabindex="-1">
+                                                    <div class="category slick-slide slick-cloned" data-slick-index="14" id="" aria-hidden="true"  tabindex="-1">
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/05/fruitvegetables-1.jpg" alt="Fruits &amp; Vegetables"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/fruits-vegetables/" tabindex="-1">Fruits &amp; Vegetables</a></h3>
                                                             <div class="category-count">12 Items</div>
                                                         </div>
                                                     </div>
-                                                    <div class="category slick-slide slick-cloned" data-slick-index="15" id="" aria-hidden="true" style="width: 234px;" tabindex="-1">
+                                                    <div class="category slick-slide slick-cloned" data-slick-index="15" id="" aria-hidden="true"  tabindex="-1">
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/grocery-staples/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/category-image2.png" alt="Grocery &amp; Staples"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/grocery-staples/" tabindex="-1">Grocery &amp; Staples</a></h3>
                                                             <div class="category-count">7 Items</div>
                                                         </div>
                                                     </div>
-                                                    <div class="category slick-slide slick-cloned" data-slick-index="16" id="" aria-hidden="true" style="width: 234px;" tabindex="-1">
+                                                    <div class="category slick-slide slick-cloned" data-slick-index="16" id="" aria-hidden="true"  tabindex="-1">
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/household-needs/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/05/household-1.jpg" alt="Household Needs"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/household-needs/" tabindex="-1">Household Needs</a></h3>
                                                             <div class="category-count">1 Items</div>
                                                         </div>
                                                     </div>
-                                                    <div class="category slick-slide slick-cloned" data-slick-index="17" id="" aria-hidden="true" style="width: 234px;" tabindex="-1">
+                                                    <div class="category slick-slide slick-cloned" data-slick-index="17" id="" aria-hidden="true"  tabindex="-1">
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/meats-seafood/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/05/meat-1.jpg" alt="Meats &amp; Seafood"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/meats-seafood/" tabindex="-1">Meats &amp; Seafood</a></h3>
@@ -841,9 +840,10 @@
                                             <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
                                         </svg>
                                         <div class="site-slider categories slick-initialized slick-slider" data-slideshow="5" data-tablet="4" data-mobile="2" data-slidespeed="1200" data-arrows="true" data-dots="false" data-autoplay="true" data-autospeed="3000">
-                                            <BitCarousel AutoPlay="true" AutoPlayInterval="5000" AnimationDuration="2" Style="height: 234px;" ShowDots="false" InfiniteScrolling="true" Direction="BitDirection.RightToLeft" VisibleItemsCount="5" ScrollItemsCount="1">
+                                         
+                                            <BitCarousel AutoPlayInterval="5000" AnimationDuration="2" Style="height: 234px;" ShowDots="false" InfiniteScrolling="true" Direction="BitDirection.RightToLeft" VisibleItemsCount="carouselCategoryItemCount" ScrollItemsCount="1">
                                                 <BitCarouselItem Class="item">
-                                                    <div class="category slick-slide" style="width: 234px;">
+                                                    <div class="category slick-slide" >
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/beverages/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/05/baverages-1.jpg" alt="Beverages"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/beverages/" tabindex="-1">Beverages</a></h3>
@@ -852,7 +852,7 @@
                                                     </div>
                                                 </BitCarouselItem>
                                                 <BitCarouselItem Class="item">
-                                                    <div class="category slick-slide" style="width: 234px;">
+                                                    <div class="category slick-slide" >
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/biscuits-snacks/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/05/biscuitssnacks-1.jpg" alt="Biscuits &amp; Snacks"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/biscuits-snacks/" tabindex="-1">Biscuits &amp; Snacks</a></h3>
@@ -861,7 +861,7 @@
                                                     </div>
                                                 </BitCarouselItem>
                                                 <BitCarouselItem Class="item">
-                                                    <div class="category slick-slide" style="width: 234px;">
+                                                    <div class="category slick-slide" >
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/beverages/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/05/baverages-1.jpg" alt="Beverages"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/beverages/" tabindex="-1">Beverages</a></h3>
@@ -870,7 +870,7 @@
                                                     </div>
                                                 </BitCarouselItem>
                                                  <BitCarouselItem Class="item">
-                                                    <div class="category slick-slide" style="width: 234px;">
+                                                    <div class="category slick-slide" >
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/beverages/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/05/baverages-1.jpg" alt="Beverages"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/beverages/" tabindex="-1">Beverages</a></h3>
@@ -879,7 +879,7 @@
                                                     </div>
                                                 </BitCarouselItem>
                                                 <BitCarouselItem Class="item">
-                                                    <div class="category slick-slide" style="width: 234px;">
+                                                    <div class="category slick-slide" >
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/biscuits-snacks/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/05/biscuitssnacks-1.jpg" alt="Biscuits &amp; Snacks"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/biscuits-snacks/" tabindex="-1">Biscuits &amp; Snacks</a></h3>
@@ -888,7 +888,7 @@
                                                     </div>
                                                 </BitCarouselItem>
                                                 <BitCarouselItem Class="item">
-                                                    <div class="category slick-slide" style="width: 234px;">
+                                                    <div class="category slick-slide" >
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/beverages/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/05/baverages-1.jpg" alt="Beverages"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/beverages/" tabindex="-1">Beverages</a></h3>
@@ -897,7 +897,7 @@
                                                     </div>
                                                 </BitCarouselItem>
                                                 <BitCarouselItem Class="item">
-                                                    <div class="category slick-slide" style="width: 234px;">
+                                                    <div class="category slick-slide" >
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/beverages/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/05/baverages-1.jpg" alt="Beverages"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/beverages/" tabindex="-1">Beverages</a></h3>
@@ -906,7 +906,7 @@
                                                     </div>
                                                 </BitCarouselItem>
                                                 <BitCarouselItem Class="item">
-                                                    <div class="category slick-slide" style="width: 234px;">
+                                                    <div class="category slick-slide" >
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/biscuits-snacks/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/05/biscuitssnacks-1.jpg" alt="Biscuits &amp; Snacks"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/biscuits-snacks/" tabindex="-1">Biscuits &amp; Snacks</a></h3>
@@ -915,7 +915,7 @@
                                                     </div>
                                                 </BitCarouselItem>
                                                 <BitCarouselItem Class="item">
-                                                    <div class="category slick-slide" style="width: 234px;">
+                                                    <div class="category slick-slide" >
                                                         <div class="category-image"><a href="https://klbtheme.com/bacola/product-category/beverages/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/05/baverages-1.jpg" alt="Beverages"></a></div>
                                                         <div class="category-detail">
                                                             <h3 class="entry-category"><a href="https://klbtheme.com/bacola/product-category/beverages/" tabindex="-1">Beverages</a></h3>
@@ -960,12 +960,11 @@
                                                         <div class="product-badges"><span class="badge style-1 onsale">23%</span><span class="badge style-1" style="background-color: #71778e;">recommended</span></div>
                                                         <a href="https://klbtheme.com/bacola/product/all-natural-italian-style-chicken-meatballs/"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/product-image-62-346x310.jpg" alt="All Natural Italian-Style Chicken Meatballs"></a>
                                                         <div class="product-buttons">
-                                                            <a href="430" class="detail-bnt quick-view-button" OnClick=@(() => IsOpen = true)>
+                                                            <BitButton Class="detail-bnt quick-view-button" Style="min-width: auto;padding: 0px;" OnClick="(() => IsOpen = true)">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                                     <path d="M128 32V0H16C7.163 0 0 7.163 0 16v112h32V54.56L180.64 203.2l22.56-22.56L54.56 32H128zM496 0H384v32h73.44L308.8 180.64l22.56 22.56L480 54.56V128h32V16c0-8.837-7.163-16-16-16zM480 457.44L331.36 308.8l-22.56 22.56L457.44 480H384v32h112c8.837 0 16-7.163 16-16V384h-32v73.44zM180.64 308.64L32 457.44V384H0v112c0 8.837 7.163 16 16 16h112v-32H54.56L203.2 331.36l-22.56-22.72z"></path>
                                                                 </svg>
-                                                            </a>
-                                                            
+                                                            </BitButton>
                                                         </div>
                                                     </div>
                                                     <div class="content-wrapper">
@@ -998,12 +997,11 @@
                                                         <div class="product-badges"><span class="badge  onsale">24%</span></div>
                                                         <a href="https://klbtheme.com/bacola/product/angies-boomchickapop-sweet-salty-kettle-corn/"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/product-image-60-346x310.jpg" alt="Angie’s Boomchickapop Sweet &amp; Salty Kettle Corn"></a>
                                                         <div class="product-buttons">
-                                                            <a href="424" class="detail-bnt quick-view-button" OnClick=@(() => IsOpen = true)>
+                                                            <BitButton Class="detail-bnt quick-view-button" Style="min-width: auto;padding: 0px;" OnClick="(() => IsOpen = true)">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                                     <path d="M128 32V0H16C7.163 0 0 7.163 0 16v112h32V54.56L180.64 203.2l22.56-22.56L54.56 32H128zM496 0H384v32h73.44L308.8 180.64l22.56 22.56L480 54.56V128h32V16c0-8.837-7.163-16-16-16zM480 457.44L331.36 308.8l-22.56 22.56L457.44 480H384v32h112c8.837 0 16-7.163 16-16V384h-32v73.44zM180.64 308.64L32 457.44V384H0v112c0 8.837 7.163 16 16 16h112v-32H54.56L203.2 331.36l-22.56-22.72z"></path>
                                                                 </svg>
-                                                            </a>
-                                                           
+                                                            </BitButton>
                                                         </div>
                                                     </div>
                                                     <div class="content-wrapper">
@@ -1036,12 +1034,11 @@
                                                         <div class="product-badges"><span class="badge style-1 onsale">19%</span><span class="badge style-2" style="background-color: #e5f8ed;color: #038e42;">organic</span></div>
                                                         <a href="https://klbtheme.com/bacola/product/field-roast-chao-cheese-creamy-original/"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/product-image-46-346x310.jpg" alt="Field Roast Chao Cheese Creamy Original"></a>
                                                         <div class="product-buttons">
-                                                            <a href="376" class="detail-bnt quick-view-button" OnClick=@(() => IsOpen = true)>
+                                                            <BitButton Class="detail-bnt quick-view-button" Style="min-width: auto;padding: 0px;" OnClick="(() => IsOpen = true)">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                                     <path d="M128 32V0H16C7.163 0 0 7.163 0 16v112h32V54.56L180.64 203.2l22.56-22.56L54.56 32H128zM496 0H384v32h73.44L308.8 180.64l22.56 22.56L480 54.56V128h32V16c0-8.837-7.163-16-16-16zM480 457.44L331.36 308.8l-22.56 22.56L457.44 480H384v32h112c8.837 0 16-7.163 16-16V384h-32v73.44zM180.64 308.64L32 457.44V384H0v112c0 8.837 7.163 16 16 16h112v-32H54.56L203.2 331.36l-22.56-22.72z"></path>
                                                                 </svg>
-                                                            </a>
-                                                            
+                                                            </BitButton>
                                                         </div>
                                                     </div>
                                                     <div class="content-wrapper">
@@ -1074,12 +1071,11 @@
                                                         <div class="product-badges"></div>
                                                         <a href="https://klbtheme.com/bacola/product/foster-farms-takeout-crispy-classic-buffalo-wings/"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/product-image-45-346x310.jpg" alt="Foster Farms Takeout Crispy Classic Buffalo Wings"></a>
                                                         <div class="product-buttons">
-                                                            <a href="373" class="detail-bnt quick-view-button" OnClick=@(() => IsOpen = true)>
+                                                            <BitButton Class="detail-bnt quick-view-button" Style="min-width: auto;padding: 0px;" OnClick="(() => IsOpen = true)">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                                     <path d="M128 32V0H16C7.163 0 0 7.163 0 16v112h32V54.56L180.64 203.2l22.56-22.56L54.56 32H128zM496 0H384v32h73.44L308.8 180.64l22.56 22.56L480 54.56V128h32V16c0-8.837-7.163-16-16-16zM480 457.44L331.36 308.8l-22.56 22.56L457.44 480H384v32h112c8.837 0 16-7.163 16-16V384h-32v73.44zM180.64 308.64L32 457.44V384H0v112c0 8.837 7.163 16 16 16h112v-32H54.56L203.2 331.36l-22.56-22.72z"></path>
                                                                 </svg>
-                                                            </a>
-                                                           
+                                                            </BitButton>
                                                         </div>
                                                     </div>
                                                     <div class="content-wrapper">
@@ -1143,12 +1139,11 @@
                                                         <div class="product-badges"><span class="badge style-1 onsale">10%</span><span class="badge style-2" style="background-color: #e5f8ed;color: #038e42;">organic</span></div>
                                                         <a href="https://klbtheme.com/bacola/product/blue-diamond-almonds-lightly-salted/"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/product-image-59-346x310.jpg" alt="Blue Diamond Almonds Lightly Salted"></a>
                                                         <div class="product-buttons">
-                                                            <a href="420" class="detail-bnt quick-view-button" OnClick=@(() => IsOpen = true)>
+                                                            <BitButton Class="detail-bnt quick-view-button" Style="min-width: auto;padding: 0px;" OnClick="(() => IsOpen = true)">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                                     <path d="M128 32V0H16C7.163 0 0 7.163 0 16v112h32V54.56L180.64 203.2l22.56-22.56L54.56 32H128zM496 0H384v32h73.44L308.8 180.64l22.56 22.56L480 54.56V128h32V16c0-8.837-7.163-16-16-16zM480 457.44L331.36 308.8l-22.56 22.56L457.44 480H384v32h112c8.837 0 16-7.163 16-16V384h-32v73.44zM180.64 308.64L32 457.44V384H0v112c0 8.837 7.163 16 16 16h112v-32H54.56L203.2 331.36l-22.56-22.72z"></path>
                                                                 </svg>
-                                                            </a>
-                                                           
+                                                            </BitButton>
                                                         </div>
                                                     </div>
                                                     <div class="content-wrapper">
@@ -1181,12 +1176,11 @@
                                                         <div class="product-badges"><span class="badge  onsale">12%</span></div>
                                                         <a href="https://klbtheme.com/bacola/product/blueberries-1-pint-package/"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/product-image-58-346x310.jpg" alt="Blueberries – 1 Pint Package"></a>
                                                         <div class="product-buttons">
-                                                            <a href="416" class="detail-bnt quick-view-button" OnClick=@(() => IsOpen = true)>
+                                                            <BitButton Class="detail-bnt quick-view-button" Style="min-width: auto;padding: 0px;" OnClick="(() => IsOpen = true)">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                                     <path d="M128 32V0H16C7.163 0 0 7.163 0 16v112h32V54.56L180.64 203.2l22.56-22.56L54.56 32H128zM496 0H384v32h73.44L308.8 180.64l22.56 22.56L480 54.56V128h32V16c0-8.837-7.163-16-16-16zM480 457.44L331.36 308.8l-22.56 22.56L457.44 480H384v32h112c8.837 0 16-7.163 16-16V384h-32v73.44zM180.64 308.64L32 457.44V384H0v112c0 8.837 7.163 16 16 16h112v-32H54.56L203.2 331.36l-22.56-22.72z"></path>
                                                                 </svg>
-                                                            </a>
-                                                          
+                                                            </BitButton>
                                                         </div>
                                                     </div>
                                                     <div class="content-wrapper">
@@ -1219,12 +1213,11 @@
                                                         <div class="product-badges"><span class="badge style-1 onsale">29%</span><span class="badge style-2" style="background-color: #e5f8ed;color: #038e42;">organic</span></div>
                                                         <a href="https://klbtheme.com/bacola/product/fresh-organic-broccoli-crowns/"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/product-image-57-346x310.jpg" alt="Fresh Organic Broccoli Crowns"></a>
                                                         <div class="product-buttons">
-                                                            <a href="413" class="detail-bnt quick-view-button" OnClick=@(() => IsOpen = true)>
+                                                            <BitButton Class="detail-bnt quick-view-button" Style="min-width: auto;padding: 0px;" OnClick="(() => IsOpen = true)">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                                     <path d="M128 32V0H16C7.163 0 0 7.163 0 16v112h32V54.56L180.64 203.2l22.56-22.56L54.56 32H128zM496 0H384v32h73.44L308.8 180.64l22.56 22.56L480 54.56V128h32V16c0-8.837-7.163-16-16-16zM480 457.44L331.36 308.8l-22.56 22.56L457.44 480H384v32h112c8.837 0 16-7.163 16-16V384h-32v73.44zM180.64 308.64L32 457.44V384H0v112c0 8.837 7.163 16 16 16h112v-32H54.56L203.2 331.36l-22.56-22.72z"></path>
                                                                 </svg>
-                                                            </a>
-                                                            
+                                                            </BitButton>
                                                         </div>
                                                     </div>
                                                     <div class="content-wrapper">
@@ -1258,12 +1251,11 @@
                                                         <div class="product-badges"><span class="badge style-1 onsale">19%</span><span class="badge style-1" style="background-color: #71778e;">Recommended</span></div>
                                                         <a href="https://klbtheme.com/bacola/product/chobani-complete-vanilla-greek-yogurt/"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/product-image-50-346x310.jpg" alt="Chobani Complete Vanilla Greek Yogurt"></a>
                                                         <div class="product-buttons">
-                                                            <a href="390" class="detail-bnt quick-view-button" OnClick=@(() => IsOpen = true)>
+                                                            <BitButton Class="detail-bnt quick-view-button" Style="min-width: auto;padding: 0px;" OnClick="(() => IsOpen = true)">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                                     <path d="M128 32V0H16C7.163 0 0 7.163 0 16v112h32V54.56L180.64 203.2l22.56-22.56L54.56 32H128zM496 0H384v32h73.44L308.8 180.64l22.56 22.56L480 54.56V128h32V16c0-8.837-7.163-16-16-16zM480 457.44L331.36 308.8l-22.56 22.56L457.44 480H384v32h112c8.837 0 16-7.163 16-16V384h-32v73.44zM180.64 308.64L32 457.44V384H0v112c0 8.837 7.163 16 16 16h112v-32H54.56L203.2 331.36l-22.56-22.72z"></path>
                                                                 </svg>
-                                                            </a>
-                                                            
+                                                            </BitButton>
                                                         </div>
                                                     </div>
                                                     <div class="content-wrapper">
@@ -2151,23 +2143,18 @@
                                             <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
                                         </svg>
                                         <div class="products site-slider slick-initialized slick-slider" data-slideshow="5" data-mobile="2" data-slidespeed="1200" data-arrows="true" data-autoplay="false" data-autospeed="" data-dots="false">
-                                            <BitCarousel AutoPlay="true" AutoPlayInterval="5000" AnimationDuration="1" Style="height: 400px;" ShowDots="false" InfiniteScrolling="true" Direction="BitDirection.RightToLeft" VisibleItemsCount="5" ScrollItemsCount="1">
+                                            <BitCarousel AutoPlayInterval="5000" AnimationDuration="1" Style="height: 400px;" ShowDots="false" InfiniteScrolling="true" Direction="BitDirection.RightToLeft" VisibleItemsCount="carouselProductItemCount" ScrollItemsCount="1">
                                                 <BitCarouselItem Class="item">
                                                     <div class="product type-product post-315 status-publish last instock product_cat-frozen-foods has-post-thumbnail shipping-taxable purchasable product-type-simple slick-slide slick-cloned" data-slick-index="-5" id="" aria-hidden="true" style="width: 235px;" tabindex="-1">
                                                         <div class="product-wrapper product-type-4">
                                                             <div class="thumbnail-wrapper">
                                                                 <a href="https://klbtheme.com/bacola/product/organic-frozen-triple-berry-blend/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/product-image-29-346x310.jpg" alt="Organic Frozen Triple Berry Blend"></a>
                                                                 <div class="product-buttons"> 
-                                                                    <BitButton Class="detail-bnt quick-view-button" OnClick="(() => IsOpen = true)">
+                                                                    <BitButton Class="detail-bnt quick-view-button" Style="min-width: auto;padding: 0px;" OnClick="(() => IsOpen = true)">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                                             <path d="M128 32V0H16C7.163 0 0 7.163 0 16v112h32V54.56L180.64 203.2l22.56-22.56L54.56 32H128zM496 0H384v32h73.44L308.8 180.64l22.56 22.56L480 54.56V128h32V16c0-8.837-7.163-16-16-16zM480 457.44L331.36 308.8l-22.56 22.56L457.44 480H384v32h112c8.837 0 16-7.163 16-16V384h-32v73.44zM180.64 308.64L32 457.44V384H0v112c0 8.837 7.163 16 16 16h112v-32H54.56L203.2 331.36l-22.56-22.72z"></path>
                                                                         </svg>
-                                                                    </BitButton>
-                                                                    <a class="detail-bnt quick-view-button" @onclick="@(() => IsOpen = true)" tabindex="-1">
-                                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                                                                            <path d="M128 32V0H16C7.163 0 0 7.163 0 16v112h32V54.56L180.64 203.2l22.56-22.56L54.56 32H128zM496 0H384v32h73.44L308.8 180.64l22.56 22.56L480 54.56V128h32V16c0-8.837-7.163-16-16-16zM480 457.44L331.36 308.8l-22.56 22.56L457.44 480H384v32h112c8.837 0 16-7.163 16-16V384h-32v73.44zM180.64 308.64L32 457.44V384H0v112c0 8.837 7.163 16 16 16h112v-32H54.56L203.2 331.36l-22.56-22.72z"></path>
-                                                                        </svg>
-                                                                    </a>                                                                   
+                                                                    </BitButton>                                                                  
                                                                 </div>
                                                             </div>
                                                             <div class="content-wrapper">
@@ -2198,11 +2185,11 @@
                                                             <div class="thumbnail-wrapper">
                                                                 <a href="https://klbtheme.com/bacola/product/organic-100-grassfed-85_15-ground-beef/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/product-image-31-346x310.jpg" alt="Organic 100% Grassfed 85_15 Ground Beef"></a>
                                                                 <div class="product-buttons">
-                                                                    <a href="323" class="detail-bnt quick-view-button" OnClick=@(() => IsOpen = true) tabindex="-1">
+                                                                    <BitButton Class="detail-bnt quick-view-button" Style="min-width: auto;padding: 0px;" OnClick="(() => IsOpen = true)">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                                             <path d="M128 32V0H16C7.163 0 0 7.163 0 16v112h32V54.56L180.64 203.2l22.56-22.56L54.56 32H128zM496 0H384v32h73.44L308.8 180.64l22.56 22.56L480 54.56V128h32V16c0-8.837-7.163-16-16-16zM480 457.44L331.36 308.8l-22.56 22.56L457.44 480H384v32h112c8.837 0 16-7.163 16-16V384h-32v73.44zM180.64 308.64L32 457.44V384H0v112c0 8.837 7.163 16 16 16h112v-32H54.56L203.2 331.36l-22.56-22.72z"></path>
                                                                         </svg>
-                                                                    </a>                                                                    
+                                                                    </BitButton>
                                                                 </div>
                                                             </div>
                                                             <div class="content-wrapper">
@@ -2234,11 +2221,11 @@
                                                                 <div class="product-badges"><span class="badge  onsale">47%</span></div>
                                                                 <a href="https://klbtheme.com/bacola/product/haagen-dazs-caramel-cone-ice-cream/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/product-image-38-346x310.jpg" alt="Haagen-Dazs Caramel Cone Ice Cream"></a>
                                                                 <div class="product-buttons">
-                                                                    <a href="352" class="detail-bnt quick-view-button" OnClick=@(() => IsOpen = true) tabindex="-1">
+                                                                    <BitButton Class="detail-bnt quick-view-button" Style="min-width: auto;padding: 0px;" OnClick="(() => IsOpen = true)">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                                             <path d="M128 32V0H16C7.163 0 0 7.163 0 16v112h32V54.56L180.64 203.2l22.56-22.56L54.56 32H128zM496 0H384v32h73.44L308.8 180.64l22.56 22.56L480 54.56V128h32V16c0-8.837-7.163-16-16-16zM480 457.44L331.36 308.8l-22.56 22.56L457.44 480H384v32h112c8.837 0 16-7.163 16-16V384h-32v73.44zM180.64 308.64L32 457.44V384H0v112c0 8.837 7.163 16 16 16h112v-32H54.56L203.2 331.36l-22.56-22.72z"></path>
                                                                         </svg>
-                                                                    </a>                                                                    
+                                                                    </BitButton>
                                                                 </div>
                                                             </div>
                                                             <div class="content-wrapper">
@@ -2269,11 +2256,11 @@
                                                             <div class="thumbnail-wrapper">
                                                                 <a href="https://klbtheme.com/bacola/product/green-giant-veggie-spirals/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/product-image-40-346x310.jpg" alt="Green Giant Veggie Spirals"></a>
                                                                 <div class="product-buttons">
-                                                                    <a href="358" class="detail-bnt quick-view-button" OnClick=@(() => IsOpen = true) tabindex="-1">
+                                                                    <BitButton Class="detail-bnt quick-view-button" Style="min-width: auto;padding: 0px;" OnClick="(() => IsOpen = true)">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                                             <path d="M128 32V0H16C7.163 0 0 7.163 0 16v112h32V54.56L180.64 203.2l22.56-22.56L54.56 32H128zM496 0H384v32h73.44L308.8 180.64l22.56 22.56L480 54.56V128h32V16c0-8.837-7.163-16-16-16zM480 457.44L331.36 308.8l-22.56 22.56L457.44 480H384v32h112c8.837 0 16-7.163 16-16V384h-32v73.44zM180.64 308.64L32 457.44V384H0v112c0 8.837 7.163 16 16 16h112v-32H54.56L203.2 331.36l-22.56-22.72z"></path>
                                                                         </svg>
-                                                                    </a>                                                                   
+                                                                    </BitButton>
                                                                 </div>
                                                             </div>
                                                             <div class="content-wrapper">
@@ -2305,11 +2292,11 @@
                                                                 <div class="product-badges"><span class="badge  onsale">41%</span></div>
                                                                 <a href="https://klbtheme.com/bacola/product/gortons-beer-battered-fish-fillets/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/product-image-41-346x310.jpg" alt="Gorton’s Beer Battered Fish Fillets"></a>
                                                                 <div class="product-buttons">
-                                                                    <a href="362" class="detail-bnt quick-view-button" OnClick=@(() => IsOpen = true) tabindex="-1">
+                                                                    <BitButton Class="detail-bnt quick-view-button" Style="min-width: auto;padding: 0px;" OnClick="(() => IsOpen = true)">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                                             <path d="M128 32V0H16C7.163 0 0 7.163 0 16v112h32V54.56L180.64 203.2l22.56-22.56L54.56 32H128zM496 0H384v32h73.44L308.8 180.64l22.56 22.56L480 54.56V128h32V16c0-8.837-7.163-16-16-16zM480 457.44L331.36 308.8l-22.56 22.56L457.44 480H384v32h112c8.837 0 16-7.163 16-16V384h-32v73.44zM180.64 308.64L32 457.44V384H0v112c0 8.837 7.163 16 16 16h112v-32H54.56L203.2 331.36l-22.56-22.72z"></path>
                                                                         </svg>
-                                                                    </a>                                                                    
+                                                                    </BitButton>
                                                                 </div>
                                                             </div>
                                                             <div class="content-wrapper">
@@ -2340,11 +2327,11 @@
                                                             <div class="thumbnail-wrapper">
                                                                 <a href="https://klbtheme.com/bacola/product/organic-frozen-triple-berry-blend/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/product-image-29-346x310.jpg" alt="Organic Frozen Triple Berry Blend"></a>
                                                                 <div class="product-buttons">
-                                                                    <a href="315" class="detail-bnt quick-view-button" OnClick=@(() => IsOpen = true) tabindex="-1">
+                                                                    <BitButton Class="detail-bnt quick-view-button" Style="min-width: auto;padding: 0px;" OnClick="(() => IsOpen = true)">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                                             <path d="M128 32V0H16C7.163 0 0 7.163 0 16v112h32V54.56L180.64 203.2l22.56-22.56L54.56 32H128zM496 0H384v32h73.44L308.8 180.64l22.56 22.56L480 54.56V128h32V16c0-8.837-7.163-16-16-16zM480 457.44L331.36 308.8l-22.56 22.56L457.44 480H384v32h112c8.837 0 16-7.163 16-16V384h-32v73.44zM180.64 308.64L32 457.44V384H0v112c0 8.837 7.163 16 16 16h112v-32H54.56L203.2 331.36l-22.56-22.72z"></path>
                                                                         </svg>
-                                                                    </a>                                                                    
+                                                                    </BitButton>
                                                                 </div>
                                                             </div>
                                                             <div class="content-wrapper">
@@ -2375,11 +2362,11 @@
                                                             <div class="thumbnail-wrapper">
                                                                 <a href="https://klbtheme.com/bacola/product/organic-100-grassfed-85_15-ground-beef/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/product-image-31-346x310.jpg" alt="Organic 100% Grassfed 85_15 Ground Beef"></a>
                                                                 <div class="product-buttons">
-                                                                    <a href="323" class="detail-bnt quick-view-button" OnClick=@(() => IsOpen = true) tabindex="-1">
+                                                                    <BitButton Class="detail-bnt quick-view-button" Style="min-width: auto;padding: 0px;" OnClick="(() => IsOpen = true)">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                                             <path d="M128 32V0H16C7.163 0 0 7.163 0 16v112h32V54.56L180.64 203.2l22.56-22.56L54.56 32H128zM496 0H384v32h73.44L308.8 180.64l22.56 22.56L480 54.56V128h32V16c0-8.837-7.163-16-16-16zM480 457.44L331.36 308.8l-22.56 22.56L457.44 480H384v32h112c8.837 0 16-7.163 16-16V384h-32v73.44zM180.64 308.64L32 457.44V384H0v112c0 8.837 7.163 16 16 16h112v-32H54.56L203.2 331.36l-22.56-22.72z"></path>
                                                                         </svg>
-                                                                    </a>                                                                   
+                                                                    </BitButton>
                                                                 </div>
                                                             </div>
                                                             <div class="content-wrapper">
@@ -2411,11 +2398,11 @@
                                                                 <div class="product-badges"><span class="badge  onsale">47%</span></div>
                                                                 <a href="https://klbtheme.com/bacola/product/haagen-dazs-caramel-cone-ice-cream/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/product-image-38-346x310.jpg" alt="Haagen-Dazs Caramel Cone Ice Cream"></a>
                                                                 <div class="product-buttons">
-                                                                    <a href="352" class="detail-bnt quick-view-button" OnClick=@(() => IsOpen = true) tabindex="-1">
+                                                                    <BitButton Class="detail-bnt quick-view-button" Style="min-width: auto;padding: 0px;" OnClick="(() => IsOpen = true)">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                                             <path d="M128 32V0H16C7.163 0 0 7.163 0 16v112h32V54.56L180.64 203.2l22.56-22.56L54.56 32H128zM496 0H384v32h73.44L308.8 180.64l22.56 22.56L480 54.56V128h32V16c0-8.837-7.163-16-16-16zM480 457.44L331.36 308.8l-22.56 22.56L457.44 480H384v32h112c8.837 0 16-7.163 16-16V384h-32v73.44zM180.64 308.64L32 457.44V384H0v112c0 8.837 7.163 16 16 16h112v-32H54.56L203.2 331.36l-22.56-22.72z"></path>
                                                                         </svg>
-                                                                    </a>                                                                    
+                                                                    </BitButton>
                                                                 </div>
                                                             </div>
                                                             <div class="content-wrapper">
@@ -2446,11 +2433,11 @@
                                                             <div class="thumbnail-wrapper">
                                                                 <a href="https://klbtheme.com/bacola/product/green-giant-veggie-spirals/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/product-image-40-346x310.jpg" alt="Green Giant Veggie Spirals"></a>
                                                                 <div class="product-buttons">
-                                                                    <a href="358" class="detail-bnt quick-view-button" OnClick=@(() => IsOpen = true) tabindex="-1">
+                                                                    <BitButton Class="detail-bnt quick-view-button" Style="min-width: auto;padding: 0px;" OnClick="(() => IsOpen = true)">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                                             <path d="M128 32V0H16C7.163 0 0 7.163 0 16v112h32V54.56L180.64 203.2l22.56-22.56L54.56 32H128zM496 0H384v32h73.44L308.8 180.64l22.56 22.56L480 54.56V128h32V16c0-8.837-7.163-16-16-16zM480 457.44L331.36 308.8l-22.56 22.56L457.44 480H384v32h112c8.837 0 16-7.163 16-16V384h-32v73.44zM180.64 308.64L32 457.44V384H0v112c0 8.837 7.163 16 16 16h112v-32H54.56L203.2 331.36l-22.56-22.72z"></path>
                                                                         </svg>
-                                                                    </a>                                                                    
+                                                                    </BitButton>
                                                                 </div>
                                                             </div>
                                                             <div class="content-wrapper">
@@ -2482,11 +2469,11 @@
                                                                 <div class="product-badges"><span class="badge  onsale">41%</span></div>
                                                                 <a href="https://klbtheme.com/bacola/product/gortons-beer-battered-fish-fillets/" tabindex="-1"><img decoding="async" src="https://klbtheme.com/bacola/wp-content/uploads/2021/04/product-image-41-346x310.jpg" alt="Gorton’s Beer Battered Fish Fillets"></a>
                                                                 <div class="product-buttons">
-                                                                    <a href="362" class="detail-bnt quick-view-button" OnClick=@(() => IsOpen = true) tabindex="-1">
+                                                                    <BitButton Class="detail-bnt quick-view-button" Style="min-width: auto;padding: 0px;" OnClick="(() => IsOpen = true)">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                                                             <path d="M128 32V0H16C7.163 0 0 7.163 0 16v112h32V54.56L180.64 203.2l22.56-22.56L54.56 32H128zM496 0H384v32h73.44L308.8 180.64l22.56 22.56L480 54.56V128h32V16c0-8.837-7.163-16-16-16zM480 457.44L331.36 308.8l-22.56 22.56L457.44 480H384v32h112c8.837 0 16-7.163 16-16V384h-32v73.44zM180.64 308.64L32 457.44V384H0v112c0 8.837 7.163 16 16 16h112v-32H54.56L203.2 331.36l-22.56-22.72z"></path>
                                                                         </svg>
-                                                                    </a>                                                                    
+                                                                    </BitButton>
                                                                 </div>
                                                             </div>
                                                             <div class="content-wrapper">
